@@ -1,7 +1,11 @@
-import React from "react";
+import PageWrapper from "../components/PageWrapper";
 
 const Settings = () => {
-    return <div>Settings</div>;
+    return (
+        <PageWrapper title={"Settings"} subTitle="change whatever you feel it's out of place">
+            <div>Settings</div>
+        </PageWrapper>
+    );
 };
 
 export default Settings;

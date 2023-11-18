@@ -5,9 +5,11 @@ import { JColors } from "./contextTypes";
 export const ThemeContext = React.createContext<{
     themeColors: JColors;
     toggleTheme: () => void;
+    isLightTheme: boolean;
 }>({
     themeColors: lightThemeColors,
     toggleTheme: () => {},
+    isLightTheme: true,
 });
 const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     const [isLightTheme, setIsLightTheme] = useState<boolean | string | null>(
@@ -38,7 +40,9 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <ThemeContext.Provider value={{ themeColors: themeColors, toggleTheme }}>
+        <ThemeContext.Provider
+            value={{ themeColors: themeColors, toggleTheme, isLightTheme: !!isLightTheme }}
+        >
             {children}
         </ThemeContext.Provider>
     );

@@ -10,7 +10,7 @@ const SideNav = () => {
     return (
         <div className="sidebar__wrapper">
             <div className="logo__wrapper">
-                <AssistantIcon fontSize="large" />
+                <AssistantIcon fontSize="medium" />
                 ChatPat
             </div>
             <div className="menu">

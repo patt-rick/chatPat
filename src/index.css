@@ -9,3 +9,9 @@
 .app__wrapper {
     border-left: 1px solid #383838;
 }
+.mainPage__wrapper {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: fit-content auto;
+    padding: 1.3rem;
+}

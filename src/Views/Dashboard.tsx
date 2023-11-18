@@ -1,7 +1,11 @@
-import React from "react";
+import PageWrapper from "../components/PageWrapper";
 
 const Dashboard = () => {
-    return <div>Dashboard</div>;
+    return (
+        <PageWrapper title={"Dashboard"} subTitle="Check all your statistics here">
+            <div>Start</div>
+        </PageWrapper>
+    );
 };
 
 export default Dashboard;
