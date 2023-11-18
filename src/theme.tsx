@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 
-// A custom theme for this app
+// Create the light theme
 const theme = createTheme({
     palette: {
         primary: {
@@ -13,7 +13,8 @@ const theme = createTheme({
         error: {
             main: red.A400,
         },
+        // Other theme options for the light theme
     },
 });
 
-export default theme;
+export { theme };

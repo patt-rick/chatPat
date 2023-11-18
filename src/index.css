@@ -3,31 +3,9 @@
     background-color: black;
     color: white;
     display: grid;
-    grid-template-columns: 18% 82%;
-}
-.sidebar__wrapper {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 4rem auto 8rem;
-}
-.app__wrapper {
-    border-left: 1px solid #383838;
+    grid-template-columns: 220px auto;
 }
 
-.logo__wrapper,
-.menu,
-.helper__wrapper {
-    border: 1px solid #383838;
-    border-radius: 0px 0px 1.2rem 0px;
-    border-left: none;
-}
-.logo__wrapper {
-    border-top: none;
-    border-radius: 0px 0px 1.2rem 0px;
-}
-.menu {
-    border-radius: 0px 1.2rem 1.2rem 0px;
-}
-.helper__wrapper {
-    border-radius: 0px 1.2rem 0px 0px;
+.app__wrapper {
+    border-left: 1px solid #383838;
 }
