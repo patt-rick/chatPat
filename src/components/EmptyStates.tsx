@@ -20,8 +20,8 @@ const EmptyStates = (props: Props) => {
     };
     return (
         <div className="empty__states">
-            <img width={500} src={img[imgToUse]} alt="" />
-            <p>this is the message</p>
+            <img width={400} src={img[imgToUse]} alt="" />
+            <p>{props.msg}</p>
         </div>
     );
 };

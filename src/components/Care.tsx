@@ -1,5 +1,6 @@
 import ChatCard from "./ChatCard";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState, useRef, useContext } from "react";
 import "../assets/css/care.css";
@@ -17,6 +18,7 @@ import { collection, addDoc } from "firebase/firestore";
 import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEvent and KeyboardEvent from 'react'
 import { ThemeContext } from "../Contexts/ThemeContext";
 import { theme } from "../theme";
+import EmptyStates from "./EmptyStates";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -172,91 +174,111 @@ const Care: React.FC = () => {
                     />
                 ))}
             </div>
-            <div style={{ borderColor: themeColors.border }} className="chat__view">
-                <div style={{ background: theme.palette.primary.main }} className="chat__header">
-                    {selectedChatName || "Please Select a Chat"}
-                </div>
-                <div style={{ background: themeColors.accentBackground }} className="chat__main">
-                    {messages.map((message, i) => (
-                        <div
-                            key={i}
-                            className={`message__contain ${
-                                message.fromClient ? "receive" : "send"
-                            }`}
-                        >
-                            <div
-                                style={{
-                                    color: themeColors.foreground,
-                                    background: message.fromClient
-                                        ? themeColors.background
-                                        : theme.palette.primary.main,
-                                }}
-                                className="message"
-                            >
-                                {message.image ? (
-                                    <div>
-                                        <img
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => window.open(message.image, "_blank")}
-                                            width={"100%"}
-                                            src={message.image as string}
-                                            alt="image"
-                                        ></img>
-                                    </div>
-                                ) : (
-                                    <div>{message.message}</div>
-                                )}
-                                <span style={{ color: themeColors.accentForeground }}>
-                                    {message.timestamp?.toDate().toString().substring(0, 21)}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-
-                    <div ref={scrollTo}></div>
-                </div>
-                <div>
-                    {image ? (
-                        <progress className="progress__bar" value={progress} max="100"></progress>
-                    ) : null}
-                    <div style={{ borderColor: themeColors.border }} className="message__send">
-                        <input
-                            style={{
-                                background: themeColors.accentBackground,
-                                color: themeColors.foreground,
-                            }}
-                            disabled={!!image}
-                            onKeyUp={handleKeyEnter}
-                            onChange={(e) => setMessage(e.target.value)}
-                            type="text"
-                            value={message}
-                            placeholder="Send a message"
+            {selectedChatId ? (
+                <div style={{ borderColor: themeColors.border }} className="chat__view">
+                    <div
+                        style={{ background: theme.palette.primary.main }}
+                        className="chat__header"
+                    >
+                        {selectedChatName || "Please Select a Chat"}
+                        <CloseIcon
+                            onClick={() => setSelectedChatId(null)}
+                            style={{ cursor: "pointer" }}
                         />
-                        <>
-                            <label className="upload__label" htmlFor="upload">
-                                <AddPhotoAlternateIcon />
-                            </label>
+                    </div>
+                    <div
+                        style={{ background: themeColors.accentBackground }}
+                        className="chat__main"
+                    >
+                        {messages.map((message, i) => (
+                            <div
+                                key={i}
+                                className={`message__contain ${
+                                    message.fromClient ? "receive" : "send"
+                                }`}
+                            >
+                                <div
+                                    style={{
+                                        color: themeColors.foreground,
+                                        background: message.fromClient
+                                            ? themeColors.background
+                                            : theme.palette.primary.main,
+                                    }}
+                                    className="message"
+                                >
+                                    {message.image ? (
+                                        <div>
+                                            <img
+                                                style={{ cursor: "pointer" }}
+                                                onClick={() => window.open(message.image, "_blank")}
+                                                width={"100%"}
+                                                src={message.image as string}
+                                                alt="image"
+                                            ></img>
+                                        </div>
+                                    ) : (
+                                        <div>{message.message}</div>
+                                    )}
+                                    <span style={{ color: themeColors.accentForeground }}>
+                                        {message.timestamp?.toDate().toString().substring(0, 21)}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+
+                        <div ref={scrollTo}></div>
+                    </div>
+                    <div>
+                        {image ? (
+                            <progress
+                                className="progress__bar"
+                                value={progress}
+                                max="100"
+                            ></progress>
+                        ) : null}
+                        <div style={{ borderColor: themeColors.border }} className="message__send">
                             <input
-                                id="upload"
-                                className="file__upload"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
+                                style={{
+                                    background: themeColors.accentBackground,
+                                    color: themeColors.foreground,
+                                }}
+                                disabled={!!image}
+                                onKeyUp={handleKeyEnter}
+                                onChange={(e) => setMessage(e.target.value)}
+                                type="text"
+                                value={message}
+                                placeholder="Send a message"
                             />
-                        </>
-                        <button
-                            onClick={image ? handleUpload : sendMessage}
-                            style={{
-                                color: theme.palette.primary.main,
-                                backgroundColor: themeColors.background,
-                            }}
-                            className="send__btn"
-                        >
-                            <SendIcon />
-                        </button>
+                            <>
+                                <label className="upload__label" htmlFor="upload">
+                                    <AddPhotoAlternateIcon />
+                                </label>
+                                <input
+                                    id="upload"
+                                    className="file__upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />
+                            </>
+                            <button
+                                onClick={image ? handleUpload : sendMessage}
+                                style={{
+                                    color: theme.palette.primary.main,
+                                    backgroundColor: themeColors.background,
+                                }}
+                                className="send__btn"
+                            >
+                                <SendIcon />
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div style={{ borderLeft: `1px solid ${themeColors.border}` }}>
+                    <EmptyStates msg="Please select a chat" imgToUse="noMessage" />
+                </div>
+            )}
         </div>
     );
 };
