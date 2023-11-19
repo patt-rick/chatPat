@@ -11,6 +11,7 @@ export const lightThemeColors: JColors = {
     accentBackground: "#efefef",
     accentForeground: "#888",
     border: "#ddd",
+    chatBackground: "#dfdfdf",
 };
 export const darkThemeColors: JColors = {
     ...generalStyles,
@@ -19,4 +20,5 @@ export const darkThemeColors: JColors = {
     accentBackground: "#1a1a1a",
     accentForeground: "#939393",
     border: "#383838",
+    chatBackground: "#1a1a1a",
 };

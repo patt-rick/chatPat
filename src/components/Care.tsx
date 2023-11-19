@@ -19,6 +19,7 @@ import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEve
 import { ThemeContext } from "../Contexts/ThemeContext";
 import { theme } from "../theme";
 import EmptyStates from "./EmptyStates";
+import ChatBackground from "../assets/ChatBackground";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -176,20 +177,18 @@ const Care: React.FC = () => {
             </div>
             {selectedChatId ? (
                 <div style={{ borderColor: themeColors.border }} className="chat__view">
+                    <ChatBackground color={themeColors.chatBackground} />
                     <div
-                        style={{ background: theme.palette.primary.main }}
+                        style={{ background: theme.palette.primary.main, zIndex: 3 }}
                         className="chat__header"
                     >
                         {selectedChatName || "Please Select a Chat"}
                         <CloseIcon
-                            onClick={() => setSelectedChatId(null)}
                             style={{ cursor: "pointer" }}
+                            onClick={() => setSelectedChatId(null)}
                         />
                     </div>
-                    <div
-                        style={{ background: themeColors.accentBackground }}
-                        className="chat__main"
-                    >
+                    <div style={{ zIndex: 2 }} className="chat__main">
                         {messages.map((message, i) => (
                             <div
                                 key={i}
