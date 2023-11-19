@@ -12,7 +12,7 @@ interface TopNavProps {
     subTitle?: string;
 }
 const TopNav = (props: TopNavProps) => {
-    const { toggleTheme, isLightTheme } = useContext(ThemeContext);
+    const { toggleTheme, isLightTheme, themeColors } = useContext(ThemeContext);
 
     const handleThemeChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
         toggleTheme();
@@ -21,7 +21,7 @@ const TopNav = (props: TopNavProps) => {
         <div className="top__nav">
             <div className="page__title">
                 {props.title}
-                <span>{props.subTitle}</span>
+                <span style={{ color: themeColors.accentForeground }}>{props.subTitle}</span>
             </div>
             <div className="nav__actions">
                 <Badge color="primary" variant="dot">

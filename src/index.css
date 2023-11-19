@@ -1,17 +1,18 @@
+* {
+    transition: all 100ms;
+}
 .main__wrapper {
     height: 100svh;
-    background-color: black;
-    color: white;
     display: grid;
     grid-template-columns: 220px auto;
 }
 
 .app__wrapper {
-    border-left: 1px solid #383838;
+    border-left: 1px solid;
 }
 .mainPage__wrapper {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: fit-content auto;
-    padding: 1.3rem;
+    padding: 0.8rem 1.2rem;
 }
