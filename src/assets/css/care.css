@@ -47,6 +47,9 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .chat__main::-webkit-scrollbar {

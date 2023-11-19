@@ -19,7 +19,8 @@ import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEve
 import { ThemeContext } from "../Contexts/ThemeContext";
 import { theme } from "../theme";
 import EmptyStates from "./EmptyStates";
-import ChatBackground from "../assets/ChatBackground";
+import darkBg from "../assets/img/darkBg.png";
+import lightBg from "../assets/img/lightBg.png";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -46,7 +47,7 @@ interface Message {
 }
 
 const Care: React.FC = () => {
-    const { themeColors } = useContext(ThemeContext);
+    const { themeColors, isLightTheme } = useContext(ThemeContext);
     const [chats, setChats] = useState<any[]>([]); // Change 'any[]' to a more specific type if possible
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
@@ -177,7 +178,6 @@ const Care: React.FC = () => {
             </div>
             {selectedChatId ? (
                 <div style={{ borderColor: themeColors.border }} className="chat__view">
-                    <ChatBackground color={themeColors.chatBackground} />
                     <div
                         style={{ background: theme.palette.primary.main, zIndex: 3 }}
                         className="chat__header"
@@ -188,7 +188,13 @@ const Care: React.FC = () => {
                             onClick={() => setSelectedChatId(null)}
                         />
                     </div>
-                    <div style={{ zIndex: 2 }} className="chat__main">
+                    <div
+                        style={{
+                            zIndex: 2,
+                            backgroundImage: `url(${isLightTheme ? lightBg : darkBg})`,
+                        }}
+                        className="chat__main"
+                    >
                         {messages.map((message, i) => (
                             <div
                                 key={i}
