@@ -11,9 +11,10 @@
     border-left: 1px solid;
 }
 .mainPage__wrapper {
+    height: 100%;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: fit-content auto;
+    grid-template-rows: 74px auto;
     padding: 0.8rem 1.2rem;
 }
 .empty__states {

@@ -1,4 +1,4 @@
-import { pickRandomAvatarColor } from "./_helpers/utilites";
+import { pickRandomAvatarColor } from "../_helpers/utilites";
 
 interface ImageProps {
     initial: string;

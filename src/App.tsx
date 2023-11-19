@@ -1,11 +1,10 @@
 import "./App.css";
-import Care from "./Care";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppRoutes } from "./routes";
 import Prevent from "./Prevent";
 import Authorize from "./Authorize";
 import { GlobalStylesFn } from "./GlobalStylesFn";
-import Login from "./Login";
+import Login from "./Views/Login";
 
 function App() {
     return (

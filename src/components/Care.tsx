@@ -1,7 +1,8 @@
 import ChatCard from "./ChatCard";
-import { useEffect, useState, useRef } from "react";
-import "./care.css";
-
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import SendIcon from "@mui/icons-material/Send";
+import { useEffect, useState, useRef, useContext } from "react";
+import "../assets/css/care.css";
 import { initializeApp } from "firebase/app";
 import {
     getFirestore,
@@ -14,6 +15,8 @@ import {
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEvent and KeyboardEvent from 'react'
+import { ThemeContext } from "../Contexts/ThemeContext";
+import { theme } from "../theme";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -40,6 +43,7 @@ interface Message {
 }
 
 const Care: React.FC = () => {
+    const { themeColors } = useContext(ThemeContext);
     const [chats, setChats] = useState<any[]>([]); // Change 'any[]' to a more specific type if possible
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
@@ -168,9 +172,11 @@ const Care: React.FC = () => {
                     />
                 ))}
             </div>
-            <div className="chat__view">
-                <div className="chat__header">{selectedChatName || "Please Select a Chat"}</div>
-                <div className="chat__main">
+            <div style={{ borderColor: themeColors.border }} className="chat__view">
+                <div style={{ background: theme.palette.primary.main }} className="chat__header">
+                    {selectedChatName || "Please Select a Chat"}
+                </div>
+                <div style={{ background: themeColors.accentBackground }} className="chat__main">
                     {messages.map((message, i) => (
                         <div
                             key={i}
@@ -178,7 +184,15 @@ const Care: React.FC = () => {
                                 message.fromClient ? "receive" : "send"
                             }`}
                         >
-                            <div className="message">
+                            <div
+                                style={{
+                                    color: themeColors.foreground,
+                                    background: message.fromClient
+                                        ? themeColors.background
+                                        : theme.palette.primary.main,
+                                }}
+                                className="message"
+                            >
                                 {message.image ? (
                                     <div>
                                         <img
@@ -192,7 +206,7 @@ const Care: React.FC = () => {
                                 ) : (
                                     <div>{message.message}</div>
                                 )}
-                                <span>
+                                <span style={{ color: themeColors.accentForeground }}>
                                     {message.timestamp?.toDate().toString().substring(0, 21)}
                                 </span>
                             </div>
@@ -205,8 +219,12 @@ const Care: React.FC = () => {
                     {image ? (
                         <progress className="progress__bar" value={progress} max="100"></progress>
                     ) : null}
-                    <div className="message__send">
+                    <div style={{ borderColor: themeColors.border }} className="message__send">
                         <input
+                            style={{
+                                background: themeColors.accentBackground,
+                                color: themeColors.foreground,
+                            }}
                             disabled={!!image}
                             onKeyUp={handleKeyEnter}
                             onChange={(e) => setMessage(e.target.value)}
@@ -216,7 +234,7 @@ const Care: React.FC = () => {
                         />
                         <>
                             <label className="upload__label" htmlFor="upload">
-                                <i className="fa-solid fa-image"></i>
+                                <AddPhotoAlternateIcon />
                             </label>
                             <input
                                 id="upload"
@@ -226,8 +244,15 @@ const Care: React.FC = () => {
                                 onChange={handleImageChange}
                             />
                         </>
-                        <button onClick={image ? handleUpload : sendMessage} className="send__btn">
-                            <i className="fa-solid fa-paper-plane"></i>
+                        <button
+                            onClick={image ? handleUpload : sendMessage}
+                            style={{
+                                color: theme.palette.primary.main,
+                                backgroundColor: themeColors.background,
+                            }}
+                            className="send__btn"
+                        >
+                            <SendIcon />
                         </button>
                     </div>
                 </div>

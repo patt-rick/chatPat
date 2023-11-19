@@ -8,7 +8,7 @@ export const lightThemeColors: JColors = {
     ...generalStyles,
     background: "#FFFFFF",
     foreground: "#000",
-    accentBackground: "#444",
+    accentBackground: "#efefef",
     accentForeground: "#888",
     border: "#ddd",
 };
@@ -16,7 +16,7 @@ export const darkThemeColors: JColors = {
     ...generalStyles,
     background: "#000",
     foreground: "#fff",
-    accentBackground: "#aaa",
+    accentBackground: "#1a1a1a",
     accentForeground: "#939393",
     border: "#383838",
 };
