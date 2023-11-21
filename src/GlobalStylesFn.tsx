@@ -1,6 +1,9 @@
 import { GlobalStyles } from "@mui/material";
+import { useContext } from "react";
+import { ThemeContext } from "./Contexts/ThemeContext";
 
 export function GlobalStylesFn() {
+    const { themeColors } = useContext(ThemeContext);
     return (
         <GlobalStyles
             styles={{
@@ -60,15 +63,15 @@ export function GlobalStylesFn() {
                     boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                 },
 
-                // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
-                //     backgroundColor: `#333 !important`,
-                // },
-                // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
-                //     backgroundColor: `#333 !important`,
-                // },
-                // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
-                //     backgroundColor: `#333 !important`,
-                // },
+                ".css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper": {
+                    backgroundColor: `${themeColors.accentBackground} !important`,
+                },
+                ".css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                    borderColor: `${themeColors.border} !important`,
+                },
                 // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
                 //     backgroundColor: `#333 !important`,
                 // },

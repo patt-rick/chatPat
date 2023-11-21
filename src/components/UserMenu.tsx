@@ -2,8 +2,10 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { ThemeContext } from "../Contexts/ThemeContext";
 
 export default function UserMenu() {
+    const { themeColors } = React.useContext(ThemeContext);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,7 +34,12 @@ export default function UserMenu() {
                     "aria-labelledby": "basic-button",
                 }}
             >
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem
+                    sx={{ color: themeColors.foreground, backgroundColor: themeColors.background }}
+                    onClick={handleClose}
+                >
+                    Logout
+                </MenuItem>
             </Menu>
         </div>
     );
