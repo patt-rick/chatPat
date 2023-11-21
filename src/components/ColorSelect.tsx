@@ -53,8 +53,8 @@ const Div = styled.div`
     padding: 1rem;
 `;
 const Color = styled.div`
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 5px;
     border: 4px solid #ddd;
     cursor: pointer;

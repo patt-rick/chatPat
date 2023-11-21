@@ -5,7 +5,7 @@ export type JColors = {
     accentBackground: string;
     border: string;
     accentForeground: string;
-    chatBackground: string;
+    chatBackgroundGradient: string;
 };
 export type User = {
     username: string;

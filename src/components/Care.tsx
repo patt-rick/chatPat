@@ -191,7 +191,9 @@ const Care: React.FC = () => {
                     <div
                         style={{
                             zIndex: 2,
-                            backgroundImage: `url(${isLightTheme ? lightBg : darkBg})`,
+                            backgroundImage: `${themeColors.chatBackgroundGradient},url(${
+                                isLightTheme ? lightBg : darkBg
+                            })`,
                         }}
                         className="chat__main"
                     >

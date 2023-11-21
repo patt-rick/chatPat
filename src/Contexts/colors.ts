@@ -11,7 +11,7 @@ export const lightThemeColors: JColors = {
     accentBackground: "#efefef",
     accentForeground: "#888",
     border: "#ddd",
-    chatBackground: "#dfdfdf",
+    chatBackgroundGradient: "linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.08))",
 };
 export const darkThemeColors: JColors = {
     ...generalStyles,
@@ -20,5 +20,5 @@ export const darkThemeColors: JColors = {
     accentBackground: "#1a1a1a",
     accentForeground: "#939393",
     border: "#383838",
-    chatBackground: "#1a1a1a",
+    chatBackgroundGradient: "linear-gradient(to bottom, rgba(0,0,0,0.05), #c9c4c433)",
 };
