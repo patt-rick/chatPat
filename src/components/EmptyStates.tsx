@@ -1,27 +1,29 @@
-import noInternet from "../assets/img/no-internet.png";
-import noMessage from "../assets/img/no-messages.png";
-import empty from "../assets/img/empty.png";
-import noInternet2 from "../assets/img/no-internet2.png";
-import notReady from "../assets/img/notReady.png";
+import { useContext } from "react";
+import { ThemeContext } from "../Contexts/ThemeContext";
 
-type ImgKeys = "noInternet" | "empty" | "noMessage" | "noInternet2" | "notReady";
+import NoInternet from "../assets/figures/NoInternet";
+import AddChat from "../assets/figures/AddChat";
+import Empty from "../assets/figures/Empty";
+import InProgress from "../assets/figures/InProgress";
+
+type ImgKeys = "noInternet" | "empty" | "noMessage" | "notReady";
 interface Props {
     msg?: string;
     imgToUse?: ImgKeys;
 }
 const EmptyStates = (props: Props) => {
+    const { themeColors } = useContext(ThemeContext);
     const { imgToUse = "noMessage" } = props;
-    const img = {
-        noInternet: noInternet,
-        empty: empty,
-        noMessage: noMessage,
-        noInternet2: noInternet2,
-        notReady: notReady,
+    const Img: { [index: string]: React.ReactElement } = {
+        noInternet: <NoInternet />,
+        empty: <Empty />,
+        noMessage: <AddChat />,
+        notReady: <InProgress />,
     };
     return (
         <div className="empty__states">
-            <img width={400} src={img[imgToUse]} alt="" />
-            <p>{props.msg}</p>
+            {Img[String(imgToUse)]}
+            <p style={{ color: themeColors.accentForeground }}>{props.msg}</p>
         </div>
     );
 };

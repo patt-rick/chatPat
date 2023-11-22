@@ -282,7 +282,13 @@ const Care: React.FC = () => {
                     </div>
                 </div>
             ) : (
-                <div style={{ borderLeft: `1px solid ${themeColors.border}` }}>
+                <div
+                    style={{
+                        borderLeft: `1px solid ${themeColors.border}`,
+                        display: "grid",
+                        placeItems: "center",
+                    }}
+                >
                     <EmptyStates msg="Please select a chat" imgToUse="noMessage" />
                 </div>
             )}

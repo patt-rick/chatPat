@@ -4,8 +4,9 @@ import PageWrapper from "../components/PageWrapper";
 const Dashboard = () => {
     return (
         <PageWrapper title={"Dashboard"} subTitle="Check all your statistics here">
-            <div>Start</div>
-            <EmptyStates msg="The little brown fox" imgToUse="notReady" />
+            <div style={{ display: "grid", placeItems: "center" }}>
+                <EmptyStates msg="Feature will be delivered soon" imgToUse="notReady" />
+            </div>
         </PageWrapper>
     );
 };

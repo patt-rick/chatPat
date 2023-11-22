@@ -4,8 +4,9 @@ import PageWrapper from "../components/PageWrapper";
 const Configuration = () => {
     return (
         <PageWrapper title={"Configuration"} subTitle="Set up your chat widget">
-            <div>Configure</div>
-            <EmptyStates msg="Very soon" imgToUse="noInternet" />
+            <div style={{ display: "grid", placeItems: "center" }}>
+                <EmptyStates msg="Feature will be delivered soon" imgToUse="notReady" />
+            </div>
         </PageWrapper>
     );
 };

@@ -18,7 +18,7 @@ const Settings = () => {
 
     return (
         <PageWrapper title={"Settings"} subTitle="Change the way your application feels">
-            <div>
+            <div style={{ padding: "2rem 0" }}>
                 <SettingsDiv>
                     <p>Change App theme</p>
                     <Select
