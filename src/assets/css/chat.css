@@ -1,0 +1,63 @@
+@keyframes showNameAnimation {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    100% {
+        width: 25rem;
+        height: 35rem;
+        bottom: 120%;
+        right: 0.5rem;
+        opacity: 1;
+    }
+}
+@keyframes reverseShowNameAnimation {
+    0% {
+        width: 25rem;
+        height: 35rem;
+        bottom: 120%;
+        right: 0.5rem;
+    }
+    100% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+}
+
+.open {
+    animation: showNameAnimation 0.5s ease-out forwards 0s;
+}
+.close {
+    animation: reverseShowNameAnimation 0.5s ease-out forwards 0s;
+}
+.chat-view {
+    overflow: auto;
+    position: relative;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.chat-view::-webkit-scrollbar {
+    width: 0px; /* For Chrome, Safari, and Opera */
+}
+
+.file__upload {
+    display: none;
+}
+.upload__label {
+    display: flex;
+    align-items: center;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.progress__bar {
+    border-radius: 0px;
+    width: 100%;
+    height: 5px;
+    position: absolute;
+}
+.ctn_btn {
+    background-color: transparent;
+}

@@ -179,7 +179,11 @@ const Care: React.FC = () => {
             {selectedChatId ? (
                 <div style={{ borderColor: themeColors.border }} className="chat__view">
                     <div
-                        style={{ background: theme.palette.primary.main, zIndex: 3 }}
+                        style={{
+                            background: theme.palette.primary.main,
+                            zIndex: 3,
+                            borderBottom: `1px solid ${themeColors.border}`,
+                        }}
                         className="chat__header"
                     >
                         {selectedChatName || "Please Select a Chat"}
@@ -210,6 +214,9 @@ const Care: React.FC = () => {
                                         background: message.fromClient
                                             ? themeColors.background
                                             : theme.palette.primary.main,
+                                        borderRadius: message.fromClient
+                                            ? " 8px 8px 8px 0px"
+                                            : "8px 8px 0px",
                                     }}
                                     className="message"
                                 >

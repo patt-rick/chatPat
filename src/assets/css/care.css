@@ -71,12 +71,12 @@
     margin-right: 2rem;
 }
 .message__contain.send .message {
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 10px;
 }
 .message__contain.receive .message {
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 6px 8px;
 }
 .message__contain span {

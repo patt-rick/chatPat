@@ -1,6 +1,10 @@
 import styled from "styled-components";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import "./App.css";
+import SendIcon from "@mui/icons-material/Send";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import CloseIcon from "@mui/icons-material/Close";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import "../assets/css/chat.css";
 
 import { initializeApp } from "firebase/app";
 import {
@@ -18,9 +22,17 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 
 import React from "react";
 import { size } from "lodash";
+import { theme } from "../theme";
+import { ThemeContext } from "../Contexts/ThemeContext";
 
 const firebaseConfig = {
-    //FIREBBASE CONFIG
+    apiKey: import.meta.env.VITE_API_KEY,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    authDomain: "jeskin-app.firebaseapp.com",
+    projectId: "jeskin-app",
+    messagingSenderId: "121247162860",
+    appId: "1:121247162860:web:ed272c4ede78be9a7820c9",
+    measurementId: "G-X3VEFGEVVK",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -31,6 +43,8 @@ type ChatProps = {
     details: any;
 };
 function Chat(props: ChatProps) {
+    const { themeColors } = useContext(ThemeContext);
+
     const { name, id, schoolName } = props?.details;
     const [animate, setAnimate] = useState(false);
     const [message, setMessage] = useState("");
@@ -147,20 +161,32 @@ function Chat(props: ChatProps) {
     };
     return (
         <ChatWrapper>
-            <ChatWidget onClick={handleButtonClick}>
-                {animate ? (
-                    <button style={{ fontSize: "1.3rem" }} name="cancel">
-                        cancel
-                    </button>
-                ) : (
-                    <button style={{ fontSize: "1.3rem" }} name="chat">
-                        chat
-                    </button>
-                )}
+            <ChatWidget
+                style={{
+                    backgroundColor: themeColors.accentBackground,
+                    color: theme.palette.primary.main,
+                }}
+                onClick={handleButtonClick}
+            >
+                {animate ? <CloseIcon /> : <ChatBubbleIcon />}
             </ChatWidget>
-            <ChatView className={animate ? "open" : "close"}>
+            <ChatView
+                style={{
+                    border: theme.palette.primary.main,
+                    backgroundColor: themeColors.accentBackground,
+                }}
+                className={animate ? "open" : "close"}
+            >
                 <div className="chat-view">
-                    <Header>SCHOOLDESK service helpLine</Header>
+                    <Header
+                        style={{
+                            background: theme.palette.primary.main,
+                            color: themeColors.foreground,
+                            borderBottom: `1px solid ${themeColors.border}`,
+                        }}
+                    >
+                        Chat Header
+                    </Header>
                     <div>
                         {chats.map(
                             (
@@ -177,7 +203,13 @@ function Chat(props: ChatProps) {
                                 <React.Fragment key={i}>
                                     {chat.fromClient ? (
                                         <TextWrapper>
-                                            <div className="msg">
+                                            <div
+                                                style={{
+                                                    backgroundColor: theme.palette.primary.main,
+                                                    color: themeColors.foreground,
+                                                }}
+                                                className="msg"
+                                            >
                                                 {chat.image ? (
                                                     <div>
                                                         <img
@@ -195,7 +227,9 @@ function Chat(props: ChatProps) {
                                                 ) : (
                                                     <div>{chat.message}</div>
                                                 )}
-                                                <span>
+                                                <span
+                                                    style={{ color: themeColors.accentForeground }}
+                                                >
                                                     {chat.timestamp
                                                         ?.toDate()
                                                         .toString()
@@ -205,7 +239,13 @@ function Chat(props: ChatProps) {
                                         </TextWrapper>
                                     ) : (
                                         <ReceiveTextWrapper>
-                                            <div className="msg">
+                                            <div
+                                                style={{
+                                                    backgroundColor: themeColors.background,
+                                                    color: themeColors.foreground,
+                                                }}
+                                                className="msg"
+                                            >
                                                 {chat.image ? (
                                                     <div>
                                                         <img
@@ -221,7 +261,9 @@ function Chat(props: ChatProps) {
                                                 ) : (
                                                     <div>{chat.message}</div>
                                                 )}
-                                                <span>
+                                                <span
+                                                    style={{ color: themeColors.accentForeground }}
+                                                >
                                                     {chat.timestamp
                                                         ?.toDate()
                                                         .toString()
@@ -240,8 +282,12 @@ function Chat(props: ChatProps) {
                     {image ? (
                         <progress className="progress__bar" value={progress} max="100"></progress>
                     ) : null}
-                    <SendMessageWrapper>
+                    <SendMessageWrapper style={{ borderColor: themeColors.border }}>
                         <Input
+                            style={{
+                                background: themeColors.accentBackground,
+                                color: themeColors.foreground,
+                            }}
                             disabled={!!image}
                             onKeyUp={handleKeyEnter}
                             onChange={(e) => setMessage(e.target.value)}
@@ -250,7 +296,7 @@ function Chat(props: ChatProps) {
                         ></Input>
                         <>
                             <label className="upload__label" htmlFor="upload">
-                                <button name="image">upload</button>
+                                <AddPhotoAlternateIcon />
                             </label>
                             <input
                                 id="upload"
@@ -260,8 +306,16 @@ function Chat(props: ChatProps) {
                                 onChange={handleImageChange}
                             />
                         </>
-                        <SendBtn onClick={image ? handleUpload : sendMessage}>
-                            <button style={{ fontSize: "1.3rem" }} name="send" />
+
+                        <SendBtn
+                            onClick={image ? handleUpload : sendMessage}
+                            style={{
+                                color: theme.palette.primary.main,
+                                background: themeColors.background,
+                            }}
+                            className="send__btn"
+                        >
+                            <SendIcon sx={{ fontSize: "20px" }} />
                         </SendBtn>
                     </SendMessageWrapper>
                 </div>
@@ -279,18 +333,15 @@ const Input = styled.input`
     flex-grow: 1;
 `;
 const SendMessageWrapper = styled.div`
-    padding: 10px 0.5rem;
+    padding: 10px 0.6rem;
     display: flex;
     justify-content: space-between;
-    border-top: 1px dashed #ccc;
+    border-top: 1px dashed;
     gap: 1rem;
 `;
-const SendBtn = styled.div`
-    padding: 4px;
+const SendBtn = styled.button`
+    padding: 8px;
     border-radius: 50%;
-    color: #fff;
-    background-color: #303144;
-    box-shadow: 1px 1px 5px #00000061;
     width: 35px;
     height: 35px;
     cursor: pointer;
@@ -301,10 +352,9 @@ const SendBtn = styled.div`
 const Header = styled.div`
     position: sticky;
     top: 0;
-    background-color: #303144;
-    color: #fff;
     padding: 0.7rem 1rem;
     font-size: 1.2rem;
+    border-radius: 20px 20px 0px;
 `;
 const TextWrapper = styled.div`
     display: flex;
@@ -312,9 +362,7 @@ const TextWrapper = styled.div`
     padding: 5px 10px;
 
     .msg {
-        background-color: #303144;
-        color: #fff;
-        border-radius: 5px;
+        border-radius: 8px 8px 0px;
         padding: 6px 8px;
         margin-left: 2rem;
 
@@ -323,7 +371,6 @@ const TextWrapper = styled.div`
             max-height: 0;
             font-size: 0.7rem;
             text-align: right;
-            color: #aaa;
             text-align: right;
             display: block;
             transition: opacity 0.5s, max-height 0.5s;
@@ -340,9 +387,7 @@ const ReceiveTextWrapper = styled.div`
     padding: 5px 10px;
 
     .msg {
-        background-color: #fff;
-        color: #444;
-        border-radius: 5px;
+        border-radius: 8px 8px 8px 0px;
         padding: 6px 8px;
         margin-right: 2rem;
 
@@ -351,7 +396,6 @@ const ReceiveTextWrapper = styled.div`
             max-height: 0;
             font-size: 0.7rem;
             text-align: right;
-            color: #aaa;
             text-align: right;
             display: block;
             transition: opacity 0.5s, max-height 0.5s;
@@ -374,9 +418,7 @@ const ChatWrapper = styled.div`
 `;
 
 const ChatView = styled.div`
-    border-radius: 5px;
-    background-color: #efefef;
-    border: 3px solid #303144;
+    border-radius: 20px 20px 0px;
     position: absolute;
     bottom: 50%;
     right: 1rem;
@@ -384,6 +426,8 @@ const ChatView = styled.div`
     flex-direction: column;
     justify-content: space-between;
     opacity: 0;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     /* z-index: -1; */
 `;
 
@@ -391,8 +435,6 @@ const ChatWidget = styled.div`
     border-radius: 50%;
     height: 50px;
     width: 50px;
-    background-color: #303144;
-    color: #fff;
     box-shadow: 1px 1px 5px #00000050;
     display: flex;
     justify-content: center;
