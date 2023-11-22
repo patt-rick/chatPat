@@ -27,7 +27,7 @@ const SideNav = () => {
         <div className="sidebar__wrapper">
             <div style={{ borderColor: themeColors.border }} className="logo__wrapper">
                 <AssistantIcon fontSize="medium" />
-                ChatPat
+                QuickChat
             </div>
             <div style={{ borderColor: themeColors.border }} className="menu">
                 {AppRoutes.map((route) => {

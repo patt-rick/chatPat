@@ -10,45 +10,44 @@ export function GlobalStylesFn() {
                 //ADD CATEGORY
                 ".css-1x51dt5-MuiInputBase-input-MuiInput-input": {
                     fontFamily: "Inter",
-                    color: `#222 !important`,
+                    color: `${themeColors.foreground} !important`,
                 },
-                ".css-aqpgxn-MuiFormLabel-root-MuiInputLabel-root": {
-                    fontFamily: "Inter",
-                    color: `#666  !important`,
-                },
-                ".css-1c2i806-MuiFormLabel-root-MuiInputLabel-root": {
-                    color: `#666  !important`,
-                },
-                ".css-4mzek5-MuiFormControl-root-MuiTextField-root ": {
-                    marginRight: "1rem !important",
-                },
-                ".css-v4u5dn-MuiInputBase-root-MuiInput-root:after ": {
-                    borderBottomColor: `#333  !important`,
+                // ".css-aqpgxn-MuiFormLabel-root-MuiInputLabel-root": {
+                //     fontFamily: "Inter",
+                //     color: `#666  !important`,
+                // },
+                // ".css-1c2i806-MuiFormLabel-root-MuiInputLabel-root": {
+                //     color: `#666  !important`,
+                // },
+                // ".css-4mzek5-MuiFormControl-root-MuiTextField-root ": {
+                //     marginRight: "1rem !important",
+                // },
+                ".css-wxrb58-MuiInputBase-root-MuiInput-root:before": {
+                    borderColor: `${themeColors.border}  !important`,
                 },
                 ".css-v4u5dn-MuiInputBase-root-MuiInput-root:before ": {
-                    borderBottom: `2px solid #bbb  !important`,
+                    borderBottom: `2px solid ${themeColors.border}  !important`,
                 },
-                ".css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root": {
-                    color: `#666  !important`,
-                },
-                ".css-1jy569b-MuiFormLabel-root-MuiInputLabel-root": {
-                    color: `#666  !important`,
-                },
+                // ".css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root": {
+                //     color: `#666  !important`,
+                // },
+                // ".css-1jy569b-MuiFormLabel-root-MuiInputLabel-root": {
+                //     color: `#666  !important`,
+                // },
                 // ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
                 //     border: `1px solid#bbb  !important`,
                 // },
                 // ".Mui-focused .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                //     border: `1px solid#333  !important`,
+                //     border: `1px solid yellow  !important`,
                 // },
-                ".css-nxo287-MuiInputBase-input-MuiOutlinedInput-input": {
-                    color: `#222 !important`,
-                },
-                ".css-ptiqhd-MuiSvgIcon-root": {
-                    color: `#222 !important`,
-                },
+                // ".css-nxo287-MuiInputBase-input-MuiOutlinedInput-input": {
+                //     color: `#222 !important`,
+                // },
+                // ".css-ptiqhd-MuiSvgIcon-root": {
+                //     color: `#222 !important`,
+                // },
                 ".css-1wuilmg-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input": {
                     padding: "1rem !important",
-                    background: `#fff !important`,
                     borderRadius: "5px",
                 },
                 ".css-1wuilmg-MuiAutocomplete-root .MuiOutlinedInput-root": {
@@ -56,7 +55,6 @@ export function GlobalStylesFn() {
                 },
                 ".MuiAutocomplete-listbox": {
                     backgroundColor: `#fff!important`,
-                    color: `#222 !important`,
                     fontSize: "14px !important",
                     border: `1px solid #bbb !important`,
                     borderRadius: "4px",
@@ -72,13 +70,12 @@ export function GlobalStylesFn() {
                 ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
                     borderColor: `${themeColors.border} !important`,
                 },
-                // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
-                //     backgroundColor: `#333 !important`,
-                // },
-                // valueOfv
-                // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
-                //     backgroundColor: `#333 !important`,
-                // },
+                ".css-10rc3y2-MuiFormLabel-root-MuiInputLabel-root": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                ".css-ouh8do-MuiFormLabel-root-MuiInputLabel-root": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
                 // ".css-zddlty-MuiButtonBase-root-MuiButton-root ": {
                 //     backgroundColor: `#333 !important`,
                 // },
