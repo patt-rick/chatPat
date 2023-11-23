@@ -4,6 +4,13 @@ import { ThemeContext } from "../../Contexts/ThemeContext";
 
 const SignIn = () => {
     const { themeColors } = useContext(ThemeContext);
+
+    const [adminEmail, setAdminEmail] = React.useState("");
+    const [adminPassword, setAdminPassword] = React.useState("");
+
+    const handleLogin = () => {
+        console.log({ adminEmail, adminPassword });
+    };
     return (
         <div style={{ borderColor: themeColors.border }} className="form__wrapper">
             <TextField
@@ -12,6 +19,8 @@ const SignIn = () => {
                 id="standard-required"
                 label="Email"
                 variant="standard"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
             />
             <TextField
                 sx={{ color: "yellow" }}
@@ -20,8 +29,14 @@ const SignIn = () => {
                 id="standard-required"
                 label="Password"
                 variant="standard"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
             />
-            <Button sx={{ borderRadius: "8px", padding: "0.7rem" }} variant="contained">
+            <Button
+                onClick={handleLogin}
+                sx={{ borderRadius: "8px", padding: "0.7rem" }}
+                variant="contained"
+            >
                 log in
             </Button>
         </div>

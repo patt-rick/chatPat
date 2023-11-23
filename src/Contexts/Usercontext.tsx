@@ -21,8 +21,23 @@ const UserContextProvider = (props: any) => {
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
     };
+    const createOrganization = ({
+        organizationName,
+        organizationEmail,
+        adminName,
+        adminEmail,
+        adminPassword,
+    }: {
+        organizationName: string;
+        organizationEmail: string;
+        adminName: string;
+        adminEmail: string;
+        adminPassword: string;
+    }) => {
+        return createUserWithEmailAndPassword(auth, adminEmail, adminPassword);
+    };
 
-    const signIn = (email: string, password: string) => {
+    const signIn = ({ email, password }: { email: string; password: string }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
@@ -81,6 +96,7 @@ const UserContextProvider = (props: any) => {
                 profileDetails,
                 error,
                 createUser,
+                createOrganization,
                 signIn,
                 logout,
                 setUser,

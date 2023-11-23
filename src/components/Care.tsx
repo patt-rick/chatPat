@@ -4,16 +4,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState, useRef, useContext } from "react";
 import "../assets/css/care.css";
-import { initializeApp } from "firebase/app";
-import {
-    getFirestore,
-    onSnapshot,
-    orderBy,
-    query,
-    serverTimestamp,
-    where,
-} from "firebase/firestore";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { onSnapshot, orderBy, query, serverTimestamp, where } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEvent and KeyboardEvent from 'react'
 import { ThemeContext } from "../Contexts/ThemeContext";
@@ -21,20 +13,7 @@ import { theme } from "../theme";
 import EmptyStates from "./EmptyStates";
 import darkBg from "../assets/img/darkBg.png";
 import lightBg from "../assets/img/lightBg.png";
-
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_API_KEY,
-    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-    authDomain: "jeskin-app.firebaseapp.com",
-    projectId: "jeskin-app",
-    messagingSenderId: "121247162860",
-    appId: "1:121247162860:web:ed272c4ede78be9a7820c9",
-    measurementId: "G-X3VEFGEVVK",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+import { db, storage } from "../firebase-config";
 
 interface Message {
     clientId: string;

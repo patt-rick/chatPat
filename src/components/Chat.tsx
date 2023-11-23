@@ -6,10 +6,8 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import "../assets/css/chat.css";
 
-import { initializeApp } from "firebase/app";
 import {
     doc,
-    getFirestore,
     onSnapshot,
     orderBy,
     query,
@@ -18,26 +16,13 @@ import {
     where,
 } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import React from "react";
 import { size } from "lodash";
 import { theme } from "../theme";
 import { ThemeContext } from "../Contexts/ThemeContext";
-
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_API_KEY,
-    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-    authDomain: "jeskin-app.firebaseapp.com",
-    projectId: "jeskin-app",
-    messagingSenderId: "121247162860",
-    appId: "1:121247162860:web:ed272c4ede78be9a7820c9",
-    measurementId: "G-X3VEFGEVVK",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+import { db, storage } from "../firebase-config";
 
 type ChatProps = {
     details: any;

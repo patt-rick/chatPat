@@ -23,6 +23,7 @@
     padding: 3rem;
     display: grid;
     place-items: center;
+    overflow-y: auto;
 }
 .login__wrapper .form__wrapper {
     display: flex;

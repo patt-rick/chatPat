@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../Contexts/ThemeContext";
 import { styled as Styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
@@ -20,6 +20,15 @@ const SignUp = () => {
     const [activeStep, setActiveStep] = React.useState(0);
     const maxPages = steps.length;
 
+    const [organizationName, setOrganizationName] = useState("");
+    const [organizationEmail, setOrganizationEmail] = useState("");
+    const [adminName, setAdminName] = useState("");
+    const [adminEmail, setAdminEmail] = useState("");
+    const [adminPassword, setAdminPassword] = useState("");
+
+    const handleSignUp = () => {
+        console.log({ organizationName, organizationEmail, adminEmail, adminName, adminPassword });
+    };
     const handleNext = () => {
         setActiveStep((prevActiveStep) => {
             if (prevActiveStep < maxPages) return prevActiveStep + 1;
@@ -121,14 +130,17 @@ const SignUp = () => {
                                 id="standard-required"
                                 label="Organization Name"
                                 variant="standard"
+                                value={organizationName}
+                                onChange={(e) => setOrganizationName(e.target.value)}
                             />
                             <TextField
-                                sx={{ color: "yellow" }}
                                 className="input-text"
                                 required
                                 id="standard-required"
                                 label="Organization Email"
                                 variant="standard"
+                                value={organizationEmail}
+                                onChange={(e) => setOrganizationEmail(e.target.value)}
                             />
                             <Button
                                 onClick={handleNext}
@@ -146,23 +158,27 @@ const SignUp = () => {
                                 id="standard-required"
                                 label="Admin Name"
                                 variant="standard"
+                                value={adminName}
+                                onChange={(e) => setAdminName(e.target.value)}
                             />
                             <TextField
-                                sx={{ color: "yellow" }}
                                 className="input-text"
                                 required
                                 id="standard-required"
                                 label="Admin Email"
                                 variant="standard"
+                                value={adminEmail}
+                                onChange={(e) => setAdminEmail(e.target.value)}
                             />
                             <TextField
-                                sx={{ color: "yellow" }}
                                 className="input-text"
                                 required
                                 id="standard-required"
                                 label="Password"
                                 variant="standard"
                                 type="password"
+                                value={adminPassword}
+                                onChange={(e) => setAdminPassword(e.target.value)}
                             />
                             <div style={{ display: "flex", gap: "1rem" }}>
                                 <Button
@@ -173,6 +189,7 @@ const SignUp = () => {
                                     back
                                 </Button>
                                 <Button
+                                    onClick={handleSignUp}
                                     sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
                                     variant="contained"
                                 >

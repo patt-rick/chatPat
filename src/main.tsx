@@ -4,6 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { theme } from "./theme";
 import App from "./App";
+import "./firebase-config";
 import "./assets/Fonts/Inter-Bold.ttf";
 import "./assets/Fonts/Inter-Light.ttf";
 import "./assets/Fonts/Inter-SemiBold.ttf";
