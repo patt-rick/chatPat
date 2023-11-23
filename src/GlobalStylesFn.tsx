@@ -1,6 +1,7 @@
 import { GlobalStyles } from "@mui/material";
 import { useContext } from "react";
 import { ThemeContext } from "./Contexts/ThemeContext";
+import { theme } from "./theme";
 
 export function GlobalStylesFn() {
     const { themeColors } = useContext(ThemeContext);
@@ -22,21 +23,21 @@ export function GlobalStylesFn() {
                 // ".css-4mzek5-MuiFormControl-root-MuiTextField-root ": {
                 //     marginRight: "1rem !important",
                 // },
-                ".css-wxrb58-MuiInputBase-root-MuiInput-root:before": {
+                ".css-z5ibk7-MuiInputBase-root-MuiInput-root:before ": {
                     borderColor: `${themeColors.border}  !important`,
                 },
                 ".css-v4u5dn-MuiInputBase-root-MuiInput-root:before ": {
-                    borderBottom: `2px solid ${themeColors.border}  !important`,
+                    borderBottom: `2px solid ${themeColors.border} !important`,
                 },
-                // ".css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root": {
-                //     color: `#666  !important`,
-                // },
-                // ".css-1jy569b-MuiFormLabel-root-MuiInputLabel-root": {
-                //     color: `#666  !important`,
-                // },
-                // ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                //     border: `1px solid#bbb  !important`,
-                // },
+                ".css-7gm2v-MuiFormLabel-root-MuiInputLabel-root": {
+                    color: `${themeColors.accentForeground}  !important`,
+                },
+                ".css-t5f2vx-MuiFormLabel-root-MuiInputLabel-root": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                ".css-t5f2vx-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
                 // ".Mui-focused .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
                 //     border: `1px solid yellow  !important`,
                 // },

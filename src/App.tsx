@@ -4,7 +4,7 @@ import { AppRoutes } from "./routes";
 import Prevent from "./Prevent";
 import Authorize from "./Authorize";
 import { GlobalStylesFn } from "./GlobalStylesFn";
-import Login from "./Views/Login";
+import Login from "./Views/Login/Login";
 
 function App() {
     return (
