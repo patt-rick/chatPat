@@ -26,16 +26,17 @@ export function GlobalStylesFn() {
                 ".css-z5ibk7-MuiInputBase-root-MuiInput-root:before ": {
                     borderColor: `${themeColors.border}  !important`,
                 },
-                ".css-v4u5dn-MuiInputBase-root-MuiInput-root:before ": {
-                    borderBottom: `2px solid ${themeColors.border} !important`,
-                },
+                ".MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-colorPrimary.MuiInputBase-formControl:before":
+                    {
+                        borderBottom: `2px solid ${themeColors.border} !important`,
+                    },
                 ".css-7gm2v-MuiFormLabel-root-MuiInputLabel-root": {
                     color: `${themeColors.accentForeground}  !important`,
                 },
-                ".css-t5f2vx-MuiFormLabel-root-MuiInputLabel-root": {
+                "#standard-required-label": {
                     color: `${themeColors.accentForeground} !important`,
                 },
-                ".css-t5f2vx-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
+                "#standard-required-label.Mui-focused": {
                     color: `${theme.palette.primary.main}  !important`,
                 },
                 // ".Mui-focused .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {

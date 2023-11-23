@@ -82,101 +82,106 @@ const SignUp = () => {
     }));
     return (
         <div>
-            <div>
-                <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-                    {steps.map((label, index) => (
-                        <Step
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => handleStepChange(index)}
-                            key={label}
-                        >
-                            <StepLabel
-                                sx={{ fontSize: "1rem" }}
-                                StepIconComponent={ColorlibStepIcon}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontSize: "1rem",
-                                        textAlign: "center",
-                                        color: themeColors.accentForeground,
-                                    }}
-                                >
-                                    {label}
-                                </Typography>
-                            </StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-            </div>
             <div style={{ margin: "auto" }}>
-                {activeStep === 0 ? (
-                    <div style={{ borderColor: themeColors.border }} className="form__wrapper">
-                        <TextField
-                            className="input-text"
-                            required
-                            id="standard-required"
-                            label="Organization Name"
-                            variant="standard"
-                        />
-                        <TextField
-                            sx={{ color: "yellow" }}
-                            className="input-text"
-                            required
-                            id="standard-required"
-                            label="Organization Email"
-                            variant="standard"
-                        />
-                        <Button
-                            onClick={handleNext}
-                            sx={{ borderRadius: "8px", padding: "0.7rem" }}
-                            variant="contained"
-                        >
-                            Add an admin
-                        </Button>
-                    </div>
-                ) : (
-                    <div style={{ borderColor: themeColors.border }} className="form__wrapper">
-                        <TextField
-                            className="input-text"
-                            required
-                            id="standard-required"
-                            label="Admin Name"
-                            variant="standard"
-                        />
-                        <TextField
-                            sx={{ color: "yellow" }}
-                            className="input-text"
-                            required
-                            id="standard-required"
-                            label="Admin Email"
-                            variant="standard"
-                        />
-                        <TextField
-                            sx={{ color: "yellow" }}
-                            className="input-text"
-                            required
-                            id="standard-required"
-                            label="Password"
-                            variant="standard"
-                            type="password"
-                        />
-                        <div style={{ display: "flex", gap: "1rem" }}>
-                            <Button
-                                onClick={handleBack}
-                                sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
-                                variant="outlined"
+                <div style={{ borderColor: themeColors.border }} className="form__wrapper">
+                    <Stepper
+                        alternativeLabel
+                        activeStep={activeStep}
+                        connector={<ColorlibConnector />}
+                    >
+                        {steps.map((label, index) => (
+                            <Step
+                                sx={{ cursor: "pointer" }}
+                                onClick={() => handleStepChange(index)}
+                                key={label}
                             >
-                                back
-                            </Button>
+                                <StepLabel
+                                    sx={{ fontSize: "1rem" }}
+                                    StepIconComponent={ColorlibStepIcon}
+                                >
+                                    <Typography
+                                        sx={{
+                                            fontSize: "1rem",
+                                            textAlign: "center",
+                                            color: themeColors.accentForeground,
+                                        }}
+                                    >
+                                        {label}
+                                    </Typography>
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+
+                    {activeStep === 0 ? (
+                        <>
+                            <TextField
+                                className="input-text"
+                                required
+                                id="standard-required"
+                                label="Organization Name"
+                                variant="standard"
+                            />
+                            <TextField
+                                sx={{ color: "yellow" }}
+                                className="input-text"
+                                required
+                                id="standard-required"
+                                label="Organization Email"
+                                variant="standard"
+                            />
                             <Button
-                                sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
+                                onClick={handleNext}
+                                sx={{ borderRadius: "8px", padding: "0.7rem" }}
                                 variant="contained"
                             >
-                                Sign up
+                                Add an admin
                             </Button>
-                        </div>
-                    </div>
-                )}
+                        </>
+                    ) : (
+                        <>
+                            <TextField
+                                className="input-text"
+                                required
+                                id="standard-required"
+                                label="Admin Name"
+                                variant="standard"
+                            />
+                            <TextField
+                                sx={{ color: "yellow" }}
+                                className="input-text"
+                                required
+                                id="standard-required"
+                                label="Admin Email"
+                                variant="standard"
+                            />
+                            <TextField
+                                sx={{ color: "yellow" }}
+                                className="input-text"
+                                required
+                                id="standard-required"
+                                label="Password"
+                                variant="standard"
+                                type="password"
+                            />
+                            <div style={{ display: "flex", gap: "1rem" }}>
+                                <Button
+                                    onClick={handleBack}
+                                    sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
+                                    variant="outlined"
+                                >
+                                    back
+                                </Button>
+                                <Button
+                                    sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
+                                    variant="contained"
+                                >
+                                    Sign up
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
