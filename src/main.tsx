@@ -15,12 +15,14 @@ import "./index.css";
 import "./assets/css/sideNav.css";
 import ThemeContextProvider from "./Contexts/ThemeContext";
 import UserContextProvider from "./Contexts/Usercontext";
+import Notification from "./NotificationService/Notification";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <ThemeContextProvider>
                 <UserContextProvider>
+                    <Notification />
                     <CssBaseline />
                     <App />
                 </UserContextProvider>
