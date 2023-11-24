@@ -5,10 +5,16 @@ import { AppRoutes } from "../routes";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../Contexts/ThemeContext";
 import styled from "styled-components";
+import { UserContext } from "../Contexts/Usercontext";
 
 const SideNav = () => {
+    const { logout } = useContext(UserContext);
     const { themeColors } = useContext(ThemeContext);
     const [activeRoute, setActiveRoute] = useState(window.location.pathname);
+
+    const handleLogout = () => {
+        logout();
+    };
 
     const Span = styled.span`
         color: ${themeColors.accentForeground};
@@ -54,7 +60,7 @@ const SideNav = () => {
             </div>
             <div style={{ borderColor: themeColors.border }} className="helper__wrapper">
                 <Span className="links">Contact Us</Span>
-                <Span className="links">
+                <Span onClick={handleLogout} className="links">
                     <LogoutIcon />
                     Logout
                 </Span>

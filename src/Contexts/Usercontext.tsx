@@ -6,15 +6,16 @@ import {
     onAuthStateChanged,
     sendPasswordResetEmail,
     sendEmailVerification,
+    updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { User } from "./contextTypes";
+import { showError, showSuccess, showWarning } from "../NotificationService/NotificationService";
 
 type UserContextType = {
     profile: User | null;
     currentUserName: string;
-    profileDetails: any;
     createUser: (email: string, password: string) => Promise<any>;
     createOrganization: (organization: {
         organizationName: string;
@@ -32,7 +33,6 @@ type UserContextType = {
 const defaultUserContext: UserContextType = {
     profile: null,
     currentUserName: "",
-    profileDetails: null,
     createUser: async () => Promise.resolve(),
     createOrganization: async () => Promise.resolve(),
     signIn: async () => Promise.resolve(),
@@ -47,8 +47,6 @@ export const UserContext = React.createContext<UserContextType>(defaultUserConte
 const UserContextProvider = (props: { children: ReactNode }) => {
     const [profile, setProfile] = useState<User | any>(null);
     const [currentUserName, setCurrentUserName] = useState("");
-    const [profileDetails, setProfileDetails] = useState<any>();
-    const [error, setError] = useState("");
 
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
@@ -79,13 +77,18 @@ const UserContextProvider = (props: { children: ReactNode }) => {
                     adminEmail,
                     adminPassword
                 );
+                await updateProfile(newAdmin.user, {
+                    displayName: adminName,
+                });
                 await sendEmailVerification(newAdmin.user);
-                await setDoc(doc(db, "admin", newAdmin.user.uid), {
+                await setDoc(doc(db, "admins", newAdmin.user.uid), {
                     email: newAdmin.user.email,
                     name: adminName,
                 });
                 // Sign out the user
                 await signOut(auth);
+                if (newAdmin.user) showSuccess("Success. please verify your email to login", 10000);
+                else showError("Something went wrong");
                 return newAdmin.user;
             } else throw new Error();
         } catch (e) {
@@ -93,11 +96,27 @@ const UserContextProvider = (props: { children: ReactNode }) => {
         }
     };
 
-    const signIn = ({ email, password }: { email: string; password: string }) => {
-        return signInWithEmailAndPassword(auth, email, password);
+    const signIn = async ({ email, password }: { email: string; password: string }) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            if (user.emailVerified) {
+                localStorage.setItem("CURRENT_USER", JSON.stringify(user));
+                return { success: true, name: user.displayName };
+            } else {
+                showWarning("Please verify your email to login");
+                return { success: false };
+            }
+        } catch (error: any) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            showError(`Error Code: ${errorCode}, Error Message: ${errorMessage}`);
+            return { error: true };
+        }
     };
 
     const logout = () => {
+        localStorage.removeItem("CURRENT_USER");
         return signOut(auth);
     };
 
@@ -115,22 +134,6 @@ const UserContextProvider = (props: { children: ReactNode }) => {
             });
     };
 
-    const fetchProfileDetails = async () => {
-        try {
-            if (auth.currentUser) {
-                const docRef = doc(db, "profiles", auth.currentUser.uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setProfileDetails(docSnap.data());
-                } else {
-                    // doc.data() will be undefined in this case
-                    setError("No such document!");
-                }
-            }
-        } catch (error: any) {
-            setError(error.message);
-        }
-    };
     const resetPassword = (email: string) => {
         return sendPasswordResetEmail(auth, email);
     };
@@ -149,7 +152,6 @@ const UserContextProvider = (props: { children: ReactNode }) => {
             value={{
                 profile,
                 currentUserName,
-                profileDetails,
                 createUser,
                 createOrganization,
                 signIn,

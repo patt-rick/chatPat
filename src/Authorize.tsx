@@ -2,12 +2,14 @@ import { Navigate, Outlet } from "react-router-dom";
 import SideNav from "./components/SideNav";
 import { useContext } from "react";
 import { ThemeContext } from "./Contexts/ThemeContext";
+import { UserContext } from "./Contexts/Usercontext";
 
 const Authorize = () => {
+    const { profile } = useContext(UserContext);
     const { themeColors } = useContext(ThemeContext);
     return (
         <>
-            {false ? (
+            {!profile ? (
                 <Navigate to="/login" />
             ) : (
                 <div

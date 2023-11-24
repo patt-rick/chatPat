@@ -28,9 +28,8 @@ const SignUp = () => {
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
 
-    const handleSignUp = () => {
-        console.log({ organizationName, organizationEmail, adminEmail, adminName, adminPassword });
-        createOrganization({
+    const handleSignUp = async () => {
+        await createOrganization({
             organizationName,
             organizationEmail,
             adminEmail,
@@ -136,7 +135,7 @@ const SignUp = () => {
                             <TextField
                                 className="input-text"
                                 required
-                                id="standard-required"
+                                id="standard-org-name"
                                 label="Organization Name"
                                 variant="standard"
                                 value={organizationName}
@@ -145,7 +144,7 @@ const SignUp = () => {
                             <TextField
                                 className="input-text"
                                 required
-                                id="standard-required"
+                                id="standard-org-email"
                                 label="Organization Email"
                                 variant="standard"
                                 value={organizationEmail}
@@ -164,7 +163,7 @@ const SignUp = () => {
                             <TextField
                                 className="input-text"
                                 required
-                                id="standard-required"
+                                id="standard-ad-name"
                                 label="Admin Name"
                                 variant="standard"
                                 value={adminName}
@@ -173,7 +172,7 @@ const SignUp = () => {
                             <TextField
                                 className="input-text"
                                 required
-                                id="standard-required"
+                                id="standard-ad-email"
                                 label="Admin Email"
                                 variant="standard"
                                 value={adminEmail}
@@ -182,7 +181,7 @@ const SignUp = () => {
                             <TextField
                                 className="input-text"
                                 required
-                                id="standard-required"
+                                id="standard-ad-password"
                                 label="Password"
                                 variant="standard"
                                 type="password"

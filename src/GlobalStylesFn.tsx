@@ -33,10 +33,46 @@ export function GlobalStylesFn() {
                 ".css-7gm2v-MuiFormLabel-root-MuiInputLabel-root": {
                     color: `${themeColors.accentForeground}  !important`,
                 },
-                "#standard-required-label": {
+                "#standard-email-label": {
                     color: `${themeColors.accentForeground} !important`,
                 },
-                "#standard-required-label.Mui-focused": {
+                "#standard-email-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-password-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-password-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-org-name-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-org-name-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-org-email-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-org-email-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-ad-email-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-ad-email-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-ad-name-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-ad-name-label.Mui-focused": {
+                    color: `${theme.palette.primary.main}  !important`,
+                },
+                "#standard-ad-password-label": {
+                    color: `${themeColors.accentForeground} !important`,
+                },
+                "#standard-ad-password-label.Mui-focused": {
                     color: `${theme.palette.primary.main}  !important`,
                 },
                 // ".Mui-focused .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {

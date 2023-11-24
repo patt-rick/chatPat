@@ -6,10 +6,10 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_API_KEY,
-    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    apiKey: "AIzaSyCm0XMb_xomEvxF7FQ0JVtWXgrW_acXWlo",
     authDomain: "jeskin-app.firebaseapp.com",
     projectId: "jeskin-app",
+    storageBucket: "jeskin-app.appspot.com",
     messagingSenderId: "121247162860",
     appId: "1:121247162860:web:ed272c4ede78be9a7820c9",
     measurementId: "G-X3VEFGEVVK",
