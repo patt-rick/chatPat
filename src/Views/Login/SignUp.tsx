@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import React, { useContext, useState } from "react";
-import { ThemeContext } from "../../Contexts/ThemeContext";
 import { styled as Styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -13,10 +12,13 @@ import { Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import BusinessIcon from "@mui/icons-material/Business";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import { UserContext } from "../../Contexts/Usercontext";
+import { ThemeContext } from "../../Contexts/ThemeContext";
 
 const steps = ["Organization", "Admin"];
 const SignUp = () => {
     const { themeColors } = useContext(ThemeContext);
+    const { createOrganization } = useContext(UserContext);
     const [activeStep, setActiveStep] = React.useState(0);
     const maxPages = steps.length;
 
@@ -28,6 +30,13 @@ const SignUp = () => {
 
     const handleSignUp = () => {
         console.log({ organizationName, organizationEmail, adminEmail, adminName, adminPassword });
+        createOrganization({
+            organizationName,
+            organizationEmail,
+            adminEmail,
+            adminName,
+            adminPassword,
+        });
     };
     const handleNext = () => {
         setActiveStep((prevActiveStep) => {

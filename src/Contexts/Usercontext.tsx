@@ -1,18 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
     sendPasswordResetEmail,
+    sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { User } from "./contextTypes";
 
-export const UserContext = React.createContext<any>(null);
+type UserContextType = {
+    profile: User | null;
+    currentUserName: string;
+    profileDetails: any;
+    createUser: (email: string, password: string) => Promise<any>;
+    createOrganization: (organization: {
+        organizationName: string;
+        organizationEmail: string;
+        adminName: string;
+        adminEmail: string;
+        adminPassword: string;
+    }) => Promise<any>;
+    signIn: ({ email, password }: { email: string; password: string }) => Promise<any>;
+    logout: () => Promise<void>;
+    setUser: (name: React.SetStateAction<string>) => void;
+    writeUserData: (name: any, email: any) => Promise<void>;
+    resetPassword: (email: string) => Promise<void>;
+};
+const defaultUserContext: UserContextType = {
+    profile: null,
+    currentUserName: "",
+    profileDetails: null,
+    createUser: async () => Promise.resolve(),
+    createOrganization: async () => Promise.resolve(),
+    signIn: async () => Promise.resolve(),
+    logout: async () => Promise.resolve(),
+    setUser: () => {},
+    writeUserData: async () => Promise.resolve(),
+    resetPassword: async () => Promise.resolve(),
+};
 
-const UserContextProvider = (props: any) => {
+export const UserContext = React.createContext<UserContextType>(defaultUserContext);
+
+const UserContextProvider = (props: { children: ReactNode }) => {
     const [profile, setProfile] = useState<User | any>(null);
     const [currentUserName, setCurrentUserName] = useState("");
     const [profileDetails, setProfileDetails] = useState<any>();
@@ -21,7 +53,7 @@ const UserContextProvider = (props: any) => {
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
     };
-    const createOrganization = ({
+    const createOrganization = async ({
         organizationName,
         organizationEmail,
         adminName,
@@ -34,7 +66,31 @@ const UserContextProvider = (props: any) => {
         adminEmail: string;
         adminPassword: string;
     }) => {
-        return createUserWithEmailAndPassword(auth, adminEmail, adminPassword);
+        try {
+            const organisationResp = await addDoc(collection(db, "organisations"), {
+                name: organizationName,
+                email: organizationEmail,
+                admins: [],
+                dateCreated: serverTimestamp(),
+            });
+            if (organisationResp.id) {
+                const newAdmin = await createUserWithEmailAndPassword(
+                    auth,
+                    adminEmail,
+                    adminPassword
+                );
+                await sendEmailVerification(newAdmin.user);
+                await setDoc(doc(db, "admin", newAdmin.user.uid), {
+                    email: newAdmin.user.email,
+                    name: adminName,
+                });
+                // Sign out the user
+                await signOut(auth);
+                return newAdmin.user;
+            } else throw new Error();
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     };
 
     const signIn = ({ email, password }: { email: string; password: string }) => {
@@ -94,14 +150,12 @@ const UserContextProvider = (props: any) => {
                 profile,
                 currentUserName,
                 profileDetails,
-                error,
                 createUser,
                 createOrganization,
                 signIn,
                 logout,
                 setUser,
                 writeUserData,
-                fetchProfileDetails,
                 resetPassword,
             }}
         >

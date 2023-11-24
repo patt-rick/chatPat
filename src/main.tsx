@@ -14,13 +14,16 @@ import "./assets/Fonts/Inter-Thin.ttf";
 import "./index.css";
 import "./assets/css/sideNav.css";
 import ThemeContextProvider from "./Contexts/ThemeContext";
+import UserContextProvider from "./Contexts/Usercontext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <ThemeContextProvider>
-                <CssBaseline />
-                <App />
+                <UserContextProvider>
+                    <CssBaseline />
+                    <App />
+                </UserContextProvider>
             </ThemeContextProvider>
         </ThemeProvider>
     </React.StrictMode>
