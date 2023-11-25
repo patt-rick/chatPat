@@ -11,6 +11,7 @@ const SideNav = () => {
     const { logout } = useContext(UserContext);
     const { themeColors } = useContext(ThemeContext);
     const [activeRoute, setActiveRoute] = useState(window.location.pathname);
+    const organisationData = JSON.parse(localStorage.getItem("ORGANISATION") || "{}");
 
     const handleLogout = () => {
         logout();
@@ -36,6 +37,7 @@ const SideNav = () => {
                 QuickChat
             </div>
             <div style={{ borderColor: themeColors.border }} className="menu">
+                <h3 style={{ margin: "0", fontWeight: "600" }}>{organisationData?.name}</h3>
                 {AppRoutes.map((route) => {
                     return (
                         <Span

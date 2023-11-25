@@ -17,12 +17,13 @@ import {
     serverTimestamp,
     updateDoc,
     arrayUnion,
+    getDoc,
 } from "firebase/firestore";
 import { User } from "./contextTypes";
 import { showError, showSuccess, showWarning } from "../NotificationService/NotificationService";
 
 type UserContextType = {
-    profile: User | null;
+    profile: any | null;
     currentUserName: string;
     createUser: (email: string, password: string) => Promise<any>;
     createOrganization: (organization: {
@@ -117,6 +118,31 @@ const UserContextProvider = (props: { children: ReactNode }) => {
         setLoading(false);
     };
 
+    const getOrgInfo = async (id: string) => {
+        const docRef = doc(db, "organisations", id);
+
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            localStorage.setItem("ORGANISATION", JSON.stringify(docSnap.data()));
+        } else {
+            showError("Failed to load organisation data. please login again");
+        }
+    };
+
+    const retrieveAllInfo = async (id: string) => {
+        const docRef = doc(db, "admins", id);
+
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            getOrgInfo(docSnap.data().organisations[0]);
+            localStorage.setItem("USER", JSON.stringify(docSnap.data()));
+        } else {
+            showError("Failed to load admin data. please login again");
+        }
+    };
+
     const signIn = async ({ email, password }: { email: string; password: string }) => {
         setLoading(true);
         try {
@@ -125,6 +151,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
             if (user.emailVerified) {
                 localStorage.setItem("CURRENT_USER", JSON.stringify(user));
                 setLoading(false);
+                retrieveAllInfo(user.uid);
                 return { success: true, name: user.displayName };
             } else {
                 showWarning("Please verify your email to login");

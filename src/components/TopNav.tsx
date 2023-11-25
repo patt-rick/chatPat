@@ -6,6 +6,7 @@ import UserMenu from "./UserMenu";
 import "../assets/css/topnav.css";
 import { useContext } from "react";
 import { ThemeContext } from "../Contexts/ThemeContext";
+import { UserContext } from "../Contexts/Usercontext";
 
 interface TopNavProps {
     title: string;
@@ -13,6 +14,7 @@ interface TopNavProps {
 }
 const TopNav = (props: TopNavProps) => {
     const { toggleTheme, isLightTheme, themeColors } = useContext(ThemeContext);
+    const { profile } = useContext(UserContext);
 
     const handleThemeChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
         toggleTheme();
@@ -28,7 +30,8 @@ const TopNav = (props: TopNavProps) => {
                     <NotificationsNoneIcon style={{ cursor: "pointer" }} />
                 </Badge>
                 <div className="user_Profile">
-                    <Avatar sx={{ width: 30, height: 30, margin: "0 10px" }} src="" /> Jenny Wilson
+                    <Avatar sx={{ width: 30, height: 30, margin: "0 10px" }} src="" />{" "}
+                    {profile.displayName}
                     <UserMenu />
                 </div>
                 <div className="theme__toggle">
