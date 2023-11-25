@@ -24,7 +24,7 @@ function Notification() {
         setOpen(true);
 
         // Hide the alert after 3 seconds
-        if (["success"].includes(event.detail.type))
+        if (["success", "info"].includes(event.detail.type))
             setTimeout(() => {
                 setOpen(false);
             }, event.detail.duration);

@@ -9,7 +9,15 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { doc, setDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+    doc,
+    setDoc,
+    addDoc,
+    collection,
+    serverTimestamp,
+    updateDoc,
+    arrayUnion,
+} from "firebase/firestore";
 import { User } from "./contextTypes";
 import { showError, showSuccess, showWarning } from "../NotificationService/NotificationService";
 
@@ -29,6 +37,7 @@ type UserContextType = {
     setUser: (name: React.SetStateAction<string>) => void;
     writeUserData: (name: any, email: any) => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    loading: boolean;
 };
 const defaultUserContext: UserContextType = {
     profile: null,
@@ -40,6 +49,7 @@ const defaultUserContext: UserContextType = {
     setUser: () => {},
     writeUserData: async () => Promise.resolve(),
     resetPassword: async () => Promise.resolve(),
+    loading: false,
 };
 
 export const UserContext = React.createContext<UserContextType>(defaultUserContext);
@@ -47,6 +57,7 @@ export const UserContext = React.createContext<UserContextType>(defaultUserConte
 const UserContextProvider = (props: { children: ReactNode }) => {
     const [profile, setProfile] = useState<User | any>(null);
     const [currentUserName, setCurrentUserName] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
@@ -64,6 +75,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
         adminEmail: string;
         adminPassword: string;
     }) => {
+        setLoading(true);
         try {
             const organisationResp = await addDoc(collection(db, "organisations"), {
                 name: organizationName,
@@ -77,6 +89,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
                     adminEmail,
                     adminPassword
                 );
+                await signOut(auth);
                 await updateProfile(newAdmin.user, {
                     displayName: adminName,
                 });
@@ -84,33 +97,44 @@ const UserContextProvider = (props: { children: ReactNode }) => {
                 await setDoc(doc(db, "admins", newAdmin.user.uid), {
                     email: newAdmin.user.email,
                     name: adminName,
+                    organisations: [organisationResp.id],
                 });
+                const orgRef = doc(db, "organisations", organisationResp.id);
+                await updateDoc(orgRef, {
+                    admins: arrayUnion(newAdmin.user.uid),
+                });
+
                 // Sign out the user
-                await signOut(auth);
+
                 if (newAdmin.user) showSuccess("Success. please verify your email to login", 10000);
                 else showError("Something went wrong");
+                setLoading(false);
                 return newAdmin.user;
-            } else throw new Error();
-        } catch (e) {
-            console.error("Error adding document: ", e);
+            }
+        } catch (e: any) {
+            showError(handleAuthError(e));
         }
+        setLoading(false);
     };
 
     const signIn = async ({ email, password }: { email: string; password: string }) => {
+        setLoading(true);
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             if (user.emailVerified) {
                 localStorage.setItem("CURRENT_USER", JSON.stringify(user));
+                setLoading(false);
                 return { success: true, name: user.displayName };
             } else {
                 showWarning("Please verify your email to login");
+                await signOut(auth);
+                setLoading(false);
                 return { success: false };
             }
         } catch (error: any) {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            showError(`Error Code: ${errorCode}, Error Message: ${errorMessage}`);
+            showError(handleAuthError(error));
+            setLoading(false);
             return { error: true };
         }
     };
@@ -137,6 +161,37 @@ const UserContextProvider = (props: { children: ReactNode }) => {
     const resetPassword = (email: string) => {
         return sendPasswordResetEmail(auth, email);
     };
+    function handleAuthError(error: { code: any; message: string }) {
+        let errorMessage;
+
+        switch (error.code) {
+            case "auth/invalid-email":
+                errorMessage = "The email address is invalid.";
+                break;
+            case "auth/user-disabled":
+                errorMessage = "The user corresponding to the given email has been disabled.";
+                break;
+            case "auth/user-not-found":
+                errorMessage = "There is no user found with the given email.";
+                break;
+            case "auth/wrong-password":
+                errorMessage = "The password is invalid for the given email.";
+                break;
+            case "auth/email-already-in-use":
+                errorMessage = "The email address is already in use by another account.";
+                break;
+            case "auth/operation-not-allowed":
+                errorMessage = "Email/password accounts are not enabled.";
+                break;
+            case "auth/weak-password":
+                errorMessage = "The password is too weak.";
+                break;
+            default:
+                errorMessage = "An unknown error occurred: " + error.message;
+        }
+
+        return errorMessage;
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -152,6 +207,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
             value={{
                 profile,
                 currentUserName,
+                loading,
                 createUser,
                 createOrganization,
                 signIn,

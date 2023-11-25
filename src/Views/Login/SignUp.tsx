@@ -14,11 +14,12 @@ import BusinessIcon from "@mui/icons-material/Business";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { UserContext } from "../../Contexts/Usercontext";
 import { ThemeContext } from "../../Contexts/ThemeContext";
+import Loader from "../../components/Loader";
 
 const steps = ["Organization", "Admin"];
 const SignUp = () => {
     const { themeColors } = useContext(ThemeContext);
-    const { createOrganization } = useContext(UserContext);
+    const { createOrganization, loading } = useContext(UserContext);
     const [activeStep, setActiveStep] = React.useState(0);
     const maxPages = steps.length;
 
@@ -29,6 +30,14 @@ const SignUp = () => {
     const [adminPassword, setAdminPassword] = useState("");
 
     const handleSignUp = async () => {
+        if (
+            !organizationEmail.trim() ||
+            !organizationName.trim() ||
+            !adminEmail.trim() ||
+            !adminName.trim() ||
+            !adminPassword.trim()
+        )
+            return;
         await createOrganization({
             organizationName,
             organizationEmail,
@@ -101,109 +110,124 @@ const SignUp = () => {
         <div>
             <div style={{ margin: "auto" }}>
                 <div style={{ borderColor: themeColors.border }} className="form__wrapper">
-                    <Stepper
-                        alternativeLabel
-                        activeStep={activeStep}
-                        connector={<ColorlibConnector />}
-                    >
-                        {steps.map((label, index) => (
-                            <Step
-                                sx={{ cursor: "pointer" }}
-                                onClick={() => handleStepChange(index)}
-                                key={label}
-                            >
-                                <StepLabel
-                                    sx={{ fontSize: "1rem" }}
-                                    StepIconComponent={ColorlibStepIcon}
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontSize: "1rem",
-                                            textAlign: "center",
-                                            color: themeColors.accentForeground,
-                                        }}
-                                    >
-                                        {label}
-                                    </Typography>
-                                </StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-
-                    {activeStep === 0 ? (
-                        <>
-                            <TextField
-                                className="input-text"
-                                required
-                                id="standard-org-name"
-                                label="Organization Name"
-                                variant="standard"
-                                value={organizationName}
-                                onChange={(e) => setOrganizationName(e.target.value)}
-                            />
-                            <TextField
-                                className="input-text"
-                                required
-                                id="standard-org-email"
-                                label="Organization Email"
-                                variant="standard"
-                                value={organizationEmail}
-                                onChange={(e) => setOrganizationEmail(e.target.value)}
-                            />
-                            <Button
-                                onClick={handleNext}
-                                sx={{ borderRadius: "8px", padding: "0.7rem" }}
-                                variant="contained"
-                            >
-                                Add an admin
-                            </Button>
-                        </>
+                    {loading ? (
+                        <div
+                            style={{
+                                display: "grid",
+                                placeItems: "center",
+                                height: "334px",
+                                width: "307px",
+                            }}
+                        >
+                            <Loader />
+                        </div>
                     ) : (
                         <>
-                            <TextField
-                                className="input-text"
-                                required
-                                id="standard-ad-name"
-                                label="Admin Name"
-                                variant="standard"
-                                value={adminName}
-                                onChange={(e) => setAdminName(e.target.value)}
-                            />
-                            <TextField
-                                className="input-text"
-                                required
-                                id="standard-ad-email"
-                                label="Admin Email"
-                                variant="standard"
-                                value={adminEmail}
-                                onChange={(e) => setAdminEmail(e.target.value)}
-                            />
-                            <TextField
-                                className="input-text"
-                                required
-                                id="standard-ad-password"
-                                label="Password"
-                                variant="standard"
-                                type="password"
-                                value={adminPassword}
-                                onChange={(e) => setAdminPassword(e.target.value)}
-                            />
-                            <div style={{ display: "flex", gap: "1rem" }}>
-                                <Button
-                                    onClick={handleBack}
-                                    sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
-                                    variant="outlined"
-                                >
-                                    back
-                                </Button>
-                                <Button
-                                    onClick={handleSignUp}
-                                    sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
-                                    variant="contained"
-                                >
-                                    Sign up
-                                </Button>
-                            </div>
+                            <Stepper
+                                alternativeLabel
+                                activeStep={activeStep}
+                                connector={<ColorlibConnector />}
+                            >
+                                {steps.map((label, index) => (
+                                    <Step
+                                        sx={{ cursor: "pointer" }}
+                                        onClick={() => handleStepChange(index)}
+                                        key={label}
+                                    >
+                                        <StepLabel
+                                            sx={{ fontSize: "1rem" }}
+                                            StepIconComponent={ColorlibStepIcon}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "1rem",
+                                                    textAlign: "center",
+                                                    color: themeColors.accentForeground,
+                                                }}
+                                            >
+                                                {label}
+                                            </Typography>
+                                        </StepLabel>
+                                    </Step>
+                                ))}
+                            </Stepper>
+
+                            {activeStep === 0 ? (
+                                <>
+                                    <TextField
+                                        className="input-text"
+                                        required
+                                        id="standard-org-name"
+                                        label="Organization Name"
+                                        variant="standard"
+                                        value={organizationName}
+                                        onChange={(e) => setOrganizationName(e.target.value)}
+                                    />
+                                    <TextField
+                                        className="input-text"
+                                        required
+                                        id="standard-org-email"
+                                        label="Organization Email"
+                                        variant="standard"
+                                        value={organizationEmail}
+                                        onChange={(e) => setOrganizationEmail(e.target.value)}
+                                    />
+                                    <Button
+                                        onClick={handleNext}
+                                        sx={{ borderRadius: "8px", padding: "0.7rem" }}
+                                        variant="contained"
+                                    >
+                                        Add an admin
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    <TextField
+                                        className="input-text"
+                                        required
+                                        id="standard-ad-name"
+                                        label="Admin Name"
+                                        variant="standard"
+                                        value={adminName}
+                                        onChange={(e) => setAdminName(e.target.value)}
+                                    />
+                                    <TextField
+                                        className="input-text"
+                                        required
+                                        id="standard-ad-email"
+                                        label="Admin Email"
+                                        variant="standard"
+                                        value={adminEmail}
+                                        onChange={(e) => setAdminEmail(e.target.value)}
+                                    />
+                                    <TextField
+                                        className="input-text"
+                                        required
+                                        id="standard-ad-password"
+                                        label="Password"
+                                        variant="standard"
+                                        type="password"
+                                        value={adminPassword}
+                                        onChange={(e) => setAdminPassword(e.target.value)}
+                                    />
+                                    <div style={{ display: "flex", gap: "1rem" }}>
+                                        <Button
+                                            onClick={handleBack}
+                                            sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
+                                            variant="outlined"
+                                        >
+                                            back
+                                        </Button>
+                                        <Button
+                                            onClick={handleSignUp}
+                                            sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
+                                            variant="contained"
+                                        >
+                                            Sign up
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
