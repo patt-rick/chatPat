@@ -883,6 +883,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@patt-rick/react-quickchat@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@patt-rick/react-quickchat/-/react-quickchat-0.4.3.tgz#b483be7d8fba0dd5b3049be498fdde9670150a96"
+  integrity sha512-LY+43RoZd9t+Dp5TkUnrsobGH9UGhepRvvw5T6cL041VrjMqw3o3F1KvA3MnJ2dUrP65kO9PAG2kXq15A/sZXQ==
+
 "@popperjs/core@^2.11.8":
   version "2.11.8"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"

@@ -57,9 +57,11 @@ const Care: React.FC = () => {
             ),
             (snapshot) => {
                 setMessages(snapshot.docs.map((doc) => doc.data() as Message));
-                if (scrollTo.current) {
-                    scrollTo.current.scrollIntoView({ behavior: "smooth" });
-                }
+                setTimeout(() => {
+                    if (scrollTo.current) {
+                        scrollTo.current.scrollIntoView({ behavior: "smooth" });
+                    }
+                }, 200);
             }
         );
 

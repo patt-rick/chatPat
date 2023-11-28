@@ -1,4 +1,3 @@
-import AssistantIcon from "@mui/icons-material/Assistant";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { NavLink } from "react-router-dom";
 import { AppRoutes } from "../routes";
@@ -6,6 +5,7 @@ import { useContext, useState } from "react";
 import { ThemeContext } from "../Contexts/ThemeContext";
 import styled from "styled-components";
 import { UserContext } from "../Contexts/Usercontext";
+import Logo from "../assets/figures/Logo";
 
 const SideNav = () => {
     const { logout } = useContext(UserContext);
@@ -33,7 +33,7 @@ const SideNav = () => {
     return (
         <div className="sidebar__wrapper">
             <div style={{ borderColor: themeColors.border }} className="logo__wrapper">
-                <AssistantIcon fontSize="medium" />
+                <Logo />
                 QuickChat
             </div>
             <div style={{ borderColor: themeColors.border }} className="menu">
