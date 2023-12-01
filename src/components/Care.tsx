@@ -28,6 +28,7 @@ interface Message {
 }
 
 const Care: React.FC = () => {
+    let organisationId: string = "";
     const { themeColors, isLightTheme } = useContext(ThemeContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [chats, setChats] = useState<any[]>([]);
@@ -43,12 +44,12 @@ const Care: React.FC = () => {
     useEffect(() => {
         setLoading(true);
         const data = localStorage.getItem("ORGANISATION") || "{}";
-        const id = JSON.parse(data).id ? JSON.parse(data).id : "";
+        organisationId = JSON.parse(data).id ? JSON.parse(data).id : "";
 
         const unsubscribe = onSnapshot(
             query(
                 collection(db, "clients"),
-                where("organisationId", "==", id),
+                where("organisationId", "==", organisationId),
                 orderBy("timestamp", "desc")
             ),
             (snapshot) => {
@@ -65,6 +66,7 @@ const Care: React.FC = () => {
             query(
                 collection(db, "chats"),
                 where("clientId", "==", selectedChatId),
+                where("organisationId", "==", organisationId),
                 orderBy("timestamp", "asc")
             ),
             (snapshot) => {
@@ -88,9 +90,10 @@ const Care: React.FC = () => {
 
     const sendMessage = async () => {
         try {
-            await addDoc(collection(db, "chats"), {
+            addDoc(collection(db, "chats"), {
                 clientId: selectedChatId,
                 clientName: selectedClientName,
+                organisationId: organisationId,
                 adminId: "2328Dfs4",
                 message: message,
                 image: null,
@@ -125,6 +128,7 @@ const Care: React.FC = () => {
                     await addDoc(collection(db, "chats"), {
                         clientId: selectedChatId,
                         clientName: selectedClientName,
+                        organisationId: organisationId,
                         adminId: "2328Dfs4",
                         image: url,
                         message: null,
@@ -156,6 +160,12 @@ const Care: React.FC = () => {
             else handleUpload();
         }
     };
+    /**
+     *
+     *
+     *
+     * DO CONFIG SCREEN
+     */
 
     return (
         <div className="care-wrapper">

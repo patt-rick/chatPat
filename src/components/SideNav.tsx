@@ -17,19 +17,6 @@ const SideNav = () => {
         logout();
     };
 
-    const Span = styled.span`
-        color: ${themeColors.accentForeground};
-        &:hover {
-            color: ${themeColors.foreground};
-        }
-
-        a {
-            color: ${themeColors.accentForeground};
-            &:hover {
-                color: ${themeColors.foreground};
-            }
-        }
-    `;
     return (
         <div className="sidebar__wrapper">
             <div style={{ borderColor: themeColors.border }} className="logo__wrapper">
@@ -41,6 +28,8 @@ const SideNav = () => {
                 {AppRoutes.map((route) => {
                     return (
                         <Span
+                            foreground={themeColors.foreground}
+                            accent={themeColors.accentForeground}
                             onClick={() => setActiveRoute(route.url)}
                             key={route.id}
                             className="links"
@@ -61,8 +50,19 @@ const SideNav = () => {
                 })}
             </div>
             <div style={{ borderColor: themeColors.border }} className="helper__wrapper">
-                <Span className="links">Contact Us</Span>
-                <Span onClick={handleLogout} className="links">
+                <Span
+                    foreground={themeColors.foreground}
+                    accent={themeColors.accentForeground}
+                    className="links"
+                >
+                    Contact Us
+                </Span>
+                <Span
+                    foreground={themeColors.foreground}
+                    accent={themeColors.accentForeground}
+                    onClick={handleLogout}
+                    className="links"
+                >
                     <LogoutIcon />
                     Logout
                 </Span>
@@ -72,3 +72,20 @@ const SideNav = () => {
 };
 
 export default SideNav;
+interface Props {
+    accent: string;
+    foreground: string;
+}
+const Span = styled.span<Props>`
+    color: ${(props: Props) => props.accent};
+    &:hover {
+        color: ${(props: Props) => props.foreground};
+    }
+
+    a {
+        color: ${(props: Props) => props.accent};
+        &:hover {
+            color: ${(props: Props) => props.foreground};
+        }
+    }
+`;

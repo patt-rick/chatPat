@@ -11,16 +11,9 @@ interface ChatCardProps {
 const ChatCard = (props: ChatCardProps) => {
     const { themeColors } = useContext(ThemeContext);
 
-    const Wrapper = styled.span`
-        &:hover {
-            background-color: ${themeColors.accentBackground};
-        }
-        &.active {
-            background-color: ${themeColors.accentBackground};
-        }
-    `;
     return (
         <Wrapper
+            color={themeColors.accentBackground}
             onClick={() => props.onSelect(props.data)}
             className={`chat__wrapper ${props.data.id === props.selectedChatId ? "active" : " "}`}
         >
@@ -34,3 +27,15 @@ const ChatCard = (props: ChatCardProps) => {
 };
 
 export default ChatCard;
+interface ChatProps {
+    color: string;
+}
+
+const Wrapper = styled.span<ChatProps>`
+    &:hover {
+        background-color: ${(props: ChatProps) => props.color};
+    }
+    &.active {
+        background-color: ${(props: ChatProps) => props.color};
+    }
+`;
