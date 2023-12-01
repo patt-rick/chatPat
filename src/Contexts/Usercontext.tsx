@@ -56,7 +56,9 @@ const defaultUserContext: UserContextType = {
 export const UserContext = React.createContext<UserContextType>(defaultUserContext);
 
 const UserContextProvider = (props: { children: ReactNode }) => {
-    const [profile, setProfile] = useState<User | any>(null);
+    const [profile, setProfile] = useState<User | any>(
+        JSON.parse(localStorage.getItem("CURRENT_USER") || "{}")
+    );
     const [currentUserName, setCurrentUserName] = useState("");
     const [loading, setLoading] = useState(false);
 
