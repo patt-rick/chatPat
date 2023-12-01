@@ -1,6 +1,13 @@
 const Loader = () => {
     return (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+            style={{
+                display: "flex",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <svg
                 className="spinner"
                 width="65px"

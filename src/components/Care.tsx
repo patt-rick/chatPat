@@ -14,6 +14,8 @@ import EmptyStates from "./EmptyStates";
 import darkBg from "../assets/img/darkBg.png";
 import lightBg from "../assets/img/lightBg.png";
 import { db, storage } from "../firebase-config";
+import Loader from "./Loader";
+import { size } from "lodash";
 
 interface Message {
     clientId: string;
@@ -27,6 +29,7 @@ interface Message {
 
 const Care: React.FC = () => {
     const { themeColors, isLightTheme } = useContext(ThemeContext);
+    const [loading, setLoading] = useState<boolean>(false);
     const [chats, setChats] = useState<any[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
@@ -38,6 +41,7 @@ const Care: React.FC = () => {
     const scrollTo = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        setLoading(true);
         const data = localStorage.getItem("ORGANISATION") || "{}";
         const id = JSON.parse(data).id ? JSON.parse(data).id : "";
 
@@ -49,6 +53,7 @@ const Care: React.FC = () => {
             ),
             (snapshot) => {
                 setChats(snapshot.docs.map((doc) => doc.data()));
+                setLoading(false);
             }
         );
 
@@ -155,14 +160,24 @@ const Care: React.FC = () => {
     return (
         <div className="care-wrapper">
             <div className="chat-list">
-                {chats.map((chat, i) => (
-                    <ChatCard
-                        selectedChatId={selectedChatId}
-                        onSelect={onSelectChat}
-                        key={i}
-                        data={chat}
-                    />
-                ))}
+                {loading ? (
+                    <Loader />
+                ) : !size(chats) ? (
+                    <div style={{ height: "100%", display: "grid" }}>
+                        <EmptyStates msg="No messages yet" imgToUse="empty" />
+                    </div>
+                ) : (
+                    <>
+                        {chats.map((chat, i) => (
+                            <ChatCard
+                                selectedChatId={selectedChatId}
+                                onSelect={onSelectChat}
+                                key={i}
+                                data={chat}
+                            />
+                        ))}
+                    </>
+                )}
             </div>
             {selectedChatId ? (
                 <div style={{ borderColor: themeColors.border }} className="chat__view">
