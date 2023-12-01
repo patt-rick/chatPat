@@ -103,6 +103,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
                 const orgRef = doc(db, "organisations", organisationResp.id);
                 await updateDoc(orgRef, {
                     admins: arrayUnion(newAdmin.user.uid),
+                    id: organisationResp.id,
                 });
 
                 // Sign out the user
@@ -168,6 +169,8 @@ const UserContextProvider = (props: { children: ReactNode }) => {
 
     const logout = () => {
         localStorage.removeItem("CURRENT_USER");
+        localStorage.removeItem("ORGANISATION");
+        localStorage.removeItem("USER");
         return signOut(auth);
     };
 

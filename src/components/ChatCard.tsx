@@ -24,10 +24,10 @@ const ChatCard = (props: ChatCardProps) => {
             onClick={() => props.onSelect(props.data)}
             className={`chat__wrapper ${props.data.id === props.selectedChatId ? "active" : " "}`}
         >
-            <ProfileImage initial={props.data.school[0]} id={props.data.id} />
+            <ProfileImage initial={props.data.clientName[0]} id={props.data.id} />
             <div>
                 <div className="client">{props.data.clientName}</div>
-                <span className="school">{props.data.school}</span>
+                <span className="school">{props.data.organisationName}</span>
             </div>
         </Wrapper>
     );

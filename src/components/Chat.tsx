@@ -8,6 +8,7 @@ import {
     query,
     serverTimestamp,
     setDoc,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
@@ -30,17 +31,25 @@ import {
     TextWrapper,
     UploadLabel,
 } from "./chat.styled";
-import Logo from "../assets/figures/Logo";
 import Close from "../assets/figures/Close";
-import UploadImage from "../assets/figures/UploadImage";
+import Logo from "../assets/figures/Logo";
 import SendMessage from "../assets/figures/SendMessage";
+import UploadImage from "../assets/figures/UploadImage";
 
 export type ChatProps = {
-    details: { userId: string | number; userName: string; orgId: string; orgName: string };
+    clientDetails: {
+        clientId: string | number;
+        clientName: string;
+        clientOrgName: string;
+    };
+    adminDetails: {
+        adminOrgId: string;
+        adminOrgName: string;
+    };
     primaryColor?: string;
 };
 export function Chat(props: ChatProps) {
-    const { details, primaryColor = "#556cd6" } = props;
+    const { clientDetails, adminDetails, primaryColor = "#556cd6" } = props;
     const themeColors = {
         accentBackground: "#efefef",
         accentForeground: "#888",
@@ -49,7 +58,8 @@ export function Chat(props: ChatProps) {
         border: "#ddd",
     };
 
-    const { userName, userId, orgId, orgName } = details;
+    const { clientName, clientId, clientOrgName } = clientDetails;
+    const { adminOrgId, adminOrgName } = adminDetails;
     const [animate, setAnimate] = useState(false);
     const [message, setMessage] = useState("");
     const [chats, setChats] = useState<DocumentData[]>([]);
@@ -62,7 +72,7 @@ export function Chat(props: ChatProps) {
         const unsubscribe = onSnapshot(
             query(
                 collection(db, "chats"),
-                where("clientId", "==", userId),
+                where("clientId", "==", clientId),
                 orderBy("timestamp", "asc")
             ),
             (snapshot) => {
@@ -82,22 +92,26 @@ export function Chat(props: ChatProps) {
         if (!message || !message.trim()) return;
         if (chats.length === 0) {
             try {
-                const docRef = doc(collection(db, "clients"), JSON.stringify(userId));
+                const docRef = doc(collection(db, "clients"), JSON.stringify(clientId));
                 await setDoc(docRef, {
-                    id: userId,
-                    clientName: userName,
-                    organisationId: orgId,
-                    organisationName: orgName,
+                    id: clientId,
+                    clientName: clientName,
+                    organisationId: adminOrgId,
+                    organisationName: clientOrgName,
                     timestamp: serverTimestamp(),
                 });
             } catch (error) {
                 console.error("Error adding document: ", error);
             }
+        } else {
+            await updateDoc(doc(db, "clients", JSON.stringify(clientId)), {
+                lastMessage: message,
+            });
         }
         try {
             const docRef = await addDoc(collection(db, "chats"), {
-                clientId: userId,
-                clientName: userName,
+                clientId: clientId,
+                clientName: clientName,
                 adminId: "2328Dfs4",
                 message: message,
                 fromClient: true,
@@ -115,7 +129,7 @@ export function Chat(props: ChatProps) {
 
     const handleUpload = async () => {
         if (image) {
-            const storageRef = ref(storage, `images/${image.name}`);
+            const storageRef = ref(storage, `images/${adminOrgId}/${image.name}`);
             const uploadTask = uploadBytesResumable(storageRef, image);
 
             uploadTask.on(
@@ -131,8 +145,8 @@ export function Chat(props: ChatProps) {
                     const url = await getDownloadURL(uploadTask.snapshot.ref);
                     try {
                         await addDoc(collection(db, "chats"), {
-                            clientId: userId,
-                            clientName: name,
+                            clientId: clientId,
+                            clientName: clientName,
                             adminId: "2328Dfs4",
                             image: url,
                             message: null,
@@ -191,7 +205,7 @@ export function Chat(props: ChatProps) {
                             borderBottom: `1px solid ${themeColors.border}`,
                         }}
                     >
-                        Chat Header
+                        {adminOrgName}
                     </Header>
                     <div>
                         {chats.map((chat: DocumentData, i: React.Key) => (

@@ -27,7 +27,7 @@ interface Message {
 
 const Care: React.FC = () => {
     const { themeColors, isLightTheme } = useContext(ThemeContext);
-    const [chats, setChats] = useState<any[]>([]); // Change 'any[]' to a more specific type if possible
+    const [chats, setChats] = useState<any[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
     const [selectedClientName, setSelectedClientName] = useState<string>("");
@@ -38,8 +38,15 @@ const Care: React.FC = () => {
     const scrollTo = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        const data = localStorage.getItem("ORGANISATION") || "{}";
+        const id = JSON.parse(data).id ? JSON.parse(data).id : "";
+
         const unsubscribe = onSnapshot(
-            query(collection(db, "clients"), orderBy("timestamp", "desc")),
+            query(
+                collection(db, "clients"),
+                where("organisationId", "==", id),
+                orderBy("timestamp", "desc")
+            ),
             (snapshot) => {
                 setChats(snapshot.docs.map((doc) => doc.data()));
             }
@@ -70,7 +77,7 @@ const Care: React.FC = () => {
 
     const onSelectChat = (chat: any) => {
         setSelectedChatId(chat.id);
-        setSelectedChatName(chat.school);
+        setSelectedChatName(chat.organisationName);
         setSelectedClientName(chat.clientName);
     };
 

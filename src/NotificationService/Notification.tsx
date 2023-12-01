@@ -38,7 +38,7 @@ function Notification() {
             <Snackbar
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 open={open}
-                sx={{ maxWidth: "50%" }}
+                sx={{ maxWidth: "50%", display: open ? "" : "none" }}
                 TransitionComponent={TransitionLeft}
             >
                 <Alert
