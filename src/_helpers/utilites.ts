@@ -26,3 +26,19 @@ export function pickRandomAvatarColor(id: number) {
     ];
     return colors[id % 23] || "black";
 }
+export function convertTimestampToDate(timestamp: { seconds: number; nanoseconds: number }) {
+    if (timestamp?.nanoseconds) {
+        const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+
+        const dateString = date.toLocaleString("en-US", {
+            weekday: "short", // "Sat"
+            month: "short", // "Dec"
+            day: "2-digit", // "02"
+            year: "numeric", // "2023"
+            hour: "2-digit", // "15"
+            minute: "2-digit", // "55"
+        });
+
+        return dateString;
+    }
+}

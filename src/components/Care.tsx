@@ -18,6 +18,8 @@ import Loader from "./Loader";
 import { size } from "lodash";
 import { UserContext } from "../Contexts/Usercontext";
 import { ClientsContext } from "../Contexts/ClientsContext";
+import { openDB } from "idb";
+import { convertTimestampToDate } from "../_helpers/utilites";
 
 interface Message {
     clientId: string;
@@ -43,24 +45,42 @@ const Care: React.FC = () => {
     const scrollTo = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(
-            query(
-                collection(db, "chats"),
-                where("clientId", "==", selectedChatId),
-                where("organisationId", "==", orgInfo.id),
-                orderBy("timestamp", "asc")
-            ),
-            (snapshot) => {
-                setMessages(snapshot.docs.map((doc) => doc.data() as Message));
-                setTimeout(() => {
-                    if (scrollTo.current) {
-                        scrollTo.current.scrollIntoView({ behavior: "smooth" });
-                    }
-                }, 200);
-            }
-        );
+        const fetchMessages = async () => {
+            const indexDb = await openDB("chatDB", 1, {
+                upgrade(indexDb) {
+                    indexDb.createObjectStore("messages");
+                },
+            });
+            if (!selectedChatId) return;
 
-        return () => unsubscribe();
+            let messages = await indexDb.get("messages", selectedChatId as any);
+            if (!messages) {
+                const unsubscribe = onSnapshot(
+                    query(
+                        collection(db, "chats"),
+                        where("clientId", "==", selectedChatId),
+                        where("organisationId", "==", orgInfo.id),
+                        orderBy("timestamp", "asc")
+                    ),
+                    (snapshot) => {
+                        messages = snapshot.docs.map((doc) => doc.data() as Message);
+                        indexDb.put("messages", messages, selectedChatId as any);
+                        setMessages(messages);
+                        setTimeout(() => {
+                            if (scrollTo.current) {
+                                scrollTo.current.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }, 200);
+                    }
+                );
+
+                return () => unsubscribe();
+            } else {
+                setMessages(messages);
+            }
+        };
+
+        fetchMessages();
     }, [selectedChatId]);
 
     const onSelectChat = (chat: any) => {
@@ -71,7 +91,13 @@ const Care: React.FC = () => {
 
     const sendMessage = async () => {
         try {
-            addDoc(collection(db, "chats"), {
+            const now = new Date();
+
+            const timestamp = {
+                seconds: Math.floor(now.getTime() / 1000),
+                nanoseconds: (now.getTime() % 1000) * 1000000,
+            };
+            const newMessage = {
                 clientId: selectedChatId,
                 clientName: selectedClientName,
                 organisationId: orgInfo.id,
@@ -80,11 +106,28 @@ const Care: React.FC = () => {
                 image: null,
                 fromClient: false,
                 timestamp: serverTimestamp(),
-            });
+            };
+            //@ts-ignore
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { ...newMessage, timestamp: timestamp },
+            ]);
+            await addDoc(collection(db, "chats"), newMessage);
             setMessage("");
             if (scrollTo.current) {
                 scrollTo.current.scrollIntoView({ behavior: "smooth" });
             }
+            const indexDb = await openDB("chatDB", 1, {
+                upgrade(indexDb) {
+                    indexDb.createObjectStore("messages");
+                },
+            });
+            let storedMessages = await indexDb.get("messages", selectedChatId as any);
+            if (!storedMessages) {
+                storedMessages = [];
+            }
+            storedMessages.push(newMessage);
+            await indexDb.put("messages", storedMessages, selectedChatId as any);
         } catch (e: any) {
             console.error("Error adding document: ", e);
         }
@@ -106,7 +149,13 @@ const Care: React.FC = () => {
             async () => {
                 const url = await getDownloadURL(uploadTask.snapshot.ref);
                 try {
-                    await addDoc(collection(db, "chats"), {
+                    const now = new Date();
+
+                    const timestamp = {
+                        seconds: Math.floor(now.getTime() / 1000),
+                        nanoseconds: (now.getTime() % 1000) * 1000000,
+                    };
+                    const imageMessage = {
                         clientId: selectedChatId,
                         clientName: selectedClientName,
                         organisationId: orgInfo.id,
@@ -115,12 +164,30 @@ const Care: React.FC = () => {
                         message: null,
                         fromClient: false,
                         timestamp: serverTimestamp(),
-                    });
+                    };
+
+                    //@ts-ignore
+                    setMessages((prevMessages) => [
+                        ...prevMessages,
+                        { ...imageMessage, timestamp: timestamp },
+                    ]);
+                    await addDoc(collection(db, "chats"), imageMessage);
                     setMessage("");
                     setImage(null);
                     if (scrollTo.current) {
                         scrollTo.current.scrollIntoView({ behavior: "smooth" });
                     }
+                    const indexDb = await openDB("chatDB", 1, {
+                        upgrade(indexDb) {
+                            indexDb.createObjectStore("messages");
+                        },
+                    });
+                    let storedMessages = await indexDb.get("messages", selectedChatId as any);
+                    if (!storedMessages) {
+                        storedMessages = [];
+                    }
+                    storedMessages.push(imageMessage);
+                    await indexDb.put("messages", storedMessages, selectedChatId as any);
                 } catch (e: any) {
                     console.error("Error adding document: ", e);
                 }
@@ -222,7 +289,7 @@ const Care: React.FC = () => {
                                         <div>{message.message}</div>
                                     )}
                                     <span style={{ color: themeColors.accentForeground }}>
-                                        {message.timestamp?.toDate().toString().substring(0, 21)}
+                                        {convertTimestampToDate(message.timestamp)}
                                     </span>
                                 </div>
                             </div>
