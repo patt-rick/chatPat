@@ -1,6 +1,6 @@
-import { Chat } from "@patt-rick/react-quickchat";
+// import { Chat } from "@patt-rick/react-quickchat";
 import PageWrapper from "../components/PageWrapper";
-import { theme } from "../theme";
+// import { theme } from "../theme";
 import EmptyStates from "../components/EmptyStates";
 
 const Dashboard = () => {
