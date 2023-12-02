@@ -12,9 +12,9 @@ const Dashboard = () => {
             <Chat
                 primaryColor={theme.palette.primary.main}
                 clientDetails={{
-                    clientName: "Patrick",
-                    clientId: 1,
-                    clientOrgName: "LIWSCO",
+                    clientName: "Emmanuel",
+                    clientId: 6,
+                    clientOrgName: "UPSA",
                 }}
                 adminDetails={{
                     adminOrgName: "Jeskin Org",

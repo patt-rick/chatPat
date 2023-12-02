@@ -17,6 +17,7 @@ import { db, storage } from "../firebase-config";
 import Loader from "./Loader";
 import { size } from "lodash";
 import { UserContext } from "../Contexts/Usercontext";
+import { ClientsContext } from "../Contexts/ClientsContext";
 
 interface Message {
     clientId: string;
@@ -30,9 +31,8 @@ interface Message {
 
 const Care: React.FC = () => {
     const { orgInfo } = useContext(UserContext);
+    const { clientsList, clientsLoading } = useContext(ClientsContext);
     const { themeColors, isLightTheme } = useContext(ThemeContext);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [chats, setChats] = useState<any[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
     const [selectedClientName, setSelectedClientName] = useState<string>("");
@@ -41,24 +41,6 @@ const Care: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
     const [progress, setProgress] = useState<number>(0);
     const scrollTo = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        setLoading(true);
-
-        const unsubscribe = onSnapshot(
-            query(
-                collection(db, "clients"),
-                where("organisationId", "==", orgInfo.id),
-                orderBy("timestamp", "desc")
-            ),
-            (snapshot) => {
-                setChats(snapshot.docs.map((doc) => doc.data()));
-                setLoading(false);
-            }
-        );
-
-        return () => unsubscribe();
-    }, []);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -159,25 +141,19 @@ const Care: React.FC = () => {
             else handleUpload();
         }
     };
-    /**
-     *
-     *
-     *
-     * DO CONFIG SCREEN
-     */
 
     return (
         <div className="care-wrapper">
             <div className="chat-list">
-                {loading ? (
+                {clientsLoading ? (
                     <Loader />
-                ) : !size(chats) ? (
+                ) : !size(clientsList) ? (
                     <div style={{ height: "100%", display: "grid" }}>
                         <EmptyStates msg="No messages yet" imgToUse="empty" />
                     </div>
                 ) : (
                     <>
-                        {chats.map((chat, i) => (
+                        {clientsList.map((chat, i) => (
                             <ChatCard
                                 selectedChatId={selectedChatId}
                                 onSelect={onSelectChat}

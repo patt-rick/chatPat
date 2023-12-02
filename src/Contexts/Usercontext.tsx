@@ -74,12 +74,9 @@ const UserContextProvider = (props: { children: ReactNode }) => {
     );
     const [currentUserName, setCurrentUserName] = useState("");
     const [loading, setLoading] = useState(false);
-    const [orgInfo, setOrgInfo] = useState({
-        admins: [""],
-        email: "",
-        name: "",
-        id: "",
-    });
+    const [orgInfo, setOrgInfo] = useState(
+        JSON.parse(localStorage.getItem("ORGANISATION") || "{}")
+    );
 
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
