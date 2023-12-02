@@ -22,6 +22,12 @@ import {
 import { User } from "./contextTypes";
 import { showError, showSuccess, showWarning } from "../NotificationService/NotificationService";
 
+interface OrgInfo {
+    admins: Array<string>;
+    email: string;
+    name: string;
+    id: string;
+}
 type UserContextType = {
     profile: any | null;
     currentUserName: string;
@@ -39,6 +45,7 @@ type UserContextType = {
     writeUserData: (name: any, email: any) => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
     loading: boolean;
+    orgInfo: OrgInfo;
 };
 const defaultUserContext: UserContextType = {
     profile: null,
@@ -51,6 +58,12 @@ const defaultUserContext: UserContextType = {
     writeUserData: async () => Promise.resolve(),
     resetPassword: async () => Promise.resolve(),
     loading: false,
+    orgInfo: {
+        admins: [""],
+        email: "",
+        name: "",
+        id: "",
+    },
 };
 
 export const UserContext = React.createContext<UserContextType>(defaultUserContext);
@@ -61,6 +74,12 @@ const UserContextProvider = (props: { children: ReactNode }) => {
     );
     const [currentUserName, setCurrentUserName] = useState("");
     const [loading, setLoading] = useState(false);
+    const [orgInfo, setOrgInfo] = useState({
+        admins: [""],
+        email: "",
+        name: "",
+        id: "",
+    });
 
     const createUser = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password);
@@ -127,6 +146,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
+            setOrgInfo(docSnap.data() as OrgInfo);
             localStorage.setItem("ORGANISATION", JSON.stringify(docSnap.data()));
         } else {
             showError("Failed to load organisation data. please login again");
@@ -240,6 +260,7 @@ const UserContextProvider = (props: { children: ReactNode }) => {
                 profile,
                 currentUserName,
                 loading,
+                orgInfo,
                 createUser,
                 createOrganization,
                 signIn,

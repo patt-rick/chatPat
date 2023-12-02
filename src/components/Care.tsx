@@ -16,6 +16,7 @@ import lightBg from "../assets/img/lightBg.png";
 import { db, storage } from "../firebase-config";
 import Loader from "./Loader";
 import { size } from "lodash";
+import { UserContext } from "../Contexts/Usercontext";
 
 interface Message {
     clientId: string;
@@ -28,7 +29,7 @@ interface Message {
 }
 
 const Care: React.FC = () => {
-    let organisationId: string = "";
+    const { orgInfo } = useContext(UserContext);
     const { themeColors, isLightTheme } = useContext(ThemeContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [chats, setChats] = useState<any[]>([]);
@@ -43,13 +44,11 @@ const Care: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        const data = localStorage.getItem("ORGANISATION") || "{}";
-        organisationId = JSON.parse(data).id ? JSON.parse(data).id : "";
 
         const unsubscribe = onSnapshot(
             query(
                 collection(db, "clients"),
-                where("organisationId", "==", organisationId),
+                where("organisationId", "==", orgInfo.id),
                 orderBy("timestamp", "desc")
             ),
             (snapshot) => {
@@ -66,7 +65,7 @@ const Care: React.FC = () => {
             query(
                 collection(db, "chats"),
                 where("clientId", "==", selectedChatId),
-                where("organisationId", "==", organisationId),
+                where("organisationId", "==", orgInfo.id),
                 orderBy("timestamp", "asc")
             ),
             (snapshot) => {
@@ -93,7 +92,7 @@ const Care: React.FC = () => {
             addDoc(collection(db, "chats"), {
                 clientId: selectedChatId,
                 clientName: selectedClientName,
-                organisationId: organisationId,
+                organisationId: orgInfo.id,
                 adminId: "2328Dfs4",
                 message: message,
                 image: null,
@@ -128,7 +127,7 @@ const Care: React.FC = () => {
                     await addDoc(collection(db, "chats"), {
                         clientId: selectedChatId,
                         clientName: selectedClientName,
-                        organisationId: organisationId,
+                        organisationId: orgInfo.id,
                         adminId: "2328Dfs4",
                         image: url,
                         message: null,

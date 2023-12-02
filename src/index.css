@@ -43,6 +43,7 @@
 
 .app__wrapper {
     border-left: 1px solid;
+    overflow: auto;
 }
 .mainPage__wrapper {
     height: 100%;

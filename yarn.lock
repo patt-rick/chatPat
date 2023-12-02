@@ -883,10 +883,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@patt-rick/react-quickchat@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@patt-rick/react-quickchat/-/react-quickchat-0.4.4.tgz#9c031983e51bc8cf4c6d4b0a5b8e6f11f7b77419"
-  integrity sha512-NpGq5YvVV3Mlr3LWZwJ0WUAR4qkeOw9EXjZZzz6uisJswkcSH+zek8KF+1BL5dBjTk39xBN3K5yBBkKMzN6XPA==
+"@patt-rick/react-quickchat@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@patt-rick/react-quickchat/-/react-quickchat-0.4.5.tgz#844216dac4eec712587e312d828f607b783d4156"
+  integrity sha512-FP2qU28dUOkkIet+lhFdgXqCdUaHNzUeL25MSu7yLawE7/fw2mz3Fog5DXTscRS1PP2KuSAHxr1AA2Jyv3NwcQ==
 
 "@popperjs/core@^2.11.8":
   version "2.11.8"
