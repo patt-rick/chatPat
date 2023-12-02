@@ -17,19 +17,21 @@ const ClientsContextProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         setLoading(true);
-        const unsubscribe = onSnapshot(
-            query(
-                collection(db, "clients"),
-                where("organisationId", "==", orgInfo.id),
-                orderBy("timestamp", "desc")
-            ),
-            (snapshot) => {
-                setChats(snapshot.docs.map((doc) => doc.data()));
-                setLoading(false);
-            }
-        );
+        if (orgInfo.id) {
+            const unsubscribe = onSnapshot(
+                query(
+                    collection(db, "clients"),
+                    where("organisationId", "==", orgInfo.id),
+                    orderBy("timestamp", "desc")
+                ),
+                (snapshot) => {
+                    setChats(snapshot.docs.map((doc) => doc.data()));
+                    setLoading(false);
+                }
+            );
 
-        return () => unsubscribe();
+            return () => unsubscribe();
+        }
     }, [orgInfo]);
 
     return (
