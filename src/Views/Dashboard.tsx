@@ -9,7 +9,7 @@ const Dashboard = () => {
             <div style={{ display: "grid", placeItems: "center" }}>
                 <EmptyStates msg="Feature will be delivered soon" imgToUse="notReady" />
             </div>
-            <Chat
+            {/* <Chat
                 primaryColor={theme.palette.primary.main}
                 clientDetails={{
                     clientName: "Emmanuel",
@@ -20,7 +20,7 @@ const Dashboard = () => {
                     adminOrgName: "Jeskin Org",
                     adminOrgId: "8v7EuKA4UYIyCzBwkei7",
                 }}
-            />
+            /> */}
         </PageWrapper>
     );
 };
