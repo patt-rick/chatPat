@@ -9,10 +9,11 @@ export function GlobalStylesFn() {
         <GlobalStyles
             styles={{
                 //ADD CATEGORY
-                ".css-1x51dt5-MuiInputBase-input-MuiInput-input": {
-                    fontFamily: "Inter",
+                input: {
+                    fontFamily: "Inter !important",
                     color: `${themeColors.foreground} !important`,
                 },
+                ".css-1x51dt5-MuiInputBase-input-MuiInput-input": {},
                 // ".css-aqpgxn-MuiFormLabel-root-MuiInputLabel-root": {
                 //     fontFamily: "Inter",
                 //     color: `#666  !important`,
