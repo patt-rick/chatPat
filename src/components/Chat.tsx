@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-
 import {
     DocumentData,
     doc,
@@ -16,21 +15,6 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import React from "react";
 import { db, storage } from "../firebase-config";
-import {
-    ChatView,
-    ChatView2,
-    ChatWidget,
-    ChatWrapper,
-    FileUpload,
-    Header,
-    Input,
-    ProgressBar,
-    ReceiveTextWrapper,
-    SendBtn,
-    SendMessageWrapper,
-    TextWrapper,
-    UploadLabel,
-} from "./chat.styled";
 import Close from "../assets/figures/Close";
 import Logo from "../assets/figures/Logo";
 import SendMessage from "../assets/figures/SendMessage";
@@ -48,25 +32,27 @@ export type ChatProps = {
     };
     primaryColor?: string;
 };
+
 export function Chat(props: ChatProps) {
     const { clientDetails, adminDetails, primaryColor = "#556cd6" } = props;
     const themeColors = {
-        accentBackground: "#efefef",
-        accentForeground: "#888",
-        background: "#fff",
-        foreground: "#000",
-        border: "#ddd",
+        accentBackground: "#f4f4f5", // Softer background
+        accentForeground: "#71717a", // Subtle text color
+        background: "#ffffff",
+        foreground: "#18181b",
+        border: "#e4e4e7",
     };
 
     const { clientName, clientId, clientOrgName } = clientDetails;
     const { adminOrgId, adminOrgName } = adminDetails;
-    const [animate, setAnimate] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [chats, setChats] = useState<DocumentData[]>([]);
     const [image, setImage] = useState<File | null>(null);
     const [progress, setProgress] = useState(0);
 
     const scrollTo = useRef<HTMLDivElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -165,6 +151,7 @@ export function Chat(props: ChatProps) {
             );
         }
     };
+
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setImage(e.target.files[0]);
@@ -177,159 +164,132 @@ export function Chat(props: ChatProps) {
             sendMessage();
         }
     };
+
     const handleButtonClick = () => {
-        setAnimate((value) => !value);
+        setIsOpen((prev) => !prev);
     };
+
     return (
-        <ChatWrapper>
-            <ChatWidget
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+            {/* Chat Widget Button */}
+            <button
+                className={`
+                    rounded-full w-14 h-14 shadow-lg transform transition-all duration-300 
+                    flex items-center justify-center cursor-pointer
+                    hover:scale-110 active:scale-95
+                    ${isOpen ? "rotate-180" : ""}
+                `}
                 style={{
-                    backgroundColor: themeColors.accentBackground,
-                    color: primaryColor,
+                    backgroundColor: primaryColor,
+                    color: "white",
                 }}
                 onClick={handleButtonClick}
             >
-                {animate ? <Close /> : <Logo />}
-            </ChatWidget>
-            <ChatView
-                animate={animate}
-                style={{
-                    backgroundColor: themeColors.accentBackground,
-                }}
-            >
-                <ChatView2 className="chat-view">
-                    <Header
+                {isOpen ? <Close /> : <Logo />}
+            </button>
+
+            {isOpen && (
+                <div
+                    ref={chatContainerRef}
+                    className={`
+                        w-96 h-[500px] mt-4 rounded-2xl shadow-2xl border 
+                        flex flex-col bg-white overflow-hidden
+                        transform transition-all duration-500 ease-in-out
+                        animate-fade-in-up
+                    `}
+                    style={{
+                        borderColor: themeColors.border,
+                        backgroundColor: themeColors.accentBackground,
+                    }}
+                >
+                    {/* Header */}
+                    <div
+                        className="p-4 text-lg font-semibold border-b flex items-center justify-between"
                         style={{
-                            background: primaryColor,
-                            color: themeColors.foreground,
-                            borderBottom: `1px solid ${themeColors.border}`,
+                            backgroundColor: primaryColor,
+                            color: "white",
+                            borderColor: themeColors.border,
                         }}
                     >
-                        {adminOrgName}
-                    </Header>
-                    <div>
-                        {chats.map((chat: DocumentData, i: React.Key) => (
-                            <React.Fragment key={i}>
-                                {chat.fromClient ? (
-                                    <TextWrapper>
-                                        <div
-                                            style={{
-                                                backgroundColor: primaryColor,
-                                                color: themeColors.foreground,
-                                            }}
-                                            className="msg"
-                                        >
-                                            {chat.image ? (
-                                                <div>
-                                                    <img
-                                                        style={{ cursor: "pointer" }}
-                                                        onClick={() =>
-                                                            window.open(chat.image, "_blank")
-                                                        }
-                                                        width={"100%"}
-                                                        src={chat.image}
-                                                        alt="image"
-                                                        //@ts-ignore
-                                                        crossOrigin="cross-origin"
-                                                    ></img>
-                                                </div>
-                                            ) : (
-                                                <div>{chat.message}</div>
-                                            )}
-                                            <span style={{ color: themeColors.accentForeground }}>
-                                                {chat.timestamp
-                                                    ?.toDate()
-                                                    .toString()
-                                                    .substring(0, 21)}
-                                            </span>
-                                        </div>
-                                    </TextWrapper>
-                                ) : (
-                                    <ReceiveTextWrapper>
-                                        <div
-                                            style={{
-                                                backgroundColor: themeColors.background,
-                                                color: themeColors.foreground,
-                                            }}
-                                            className="msg"
-                                        >
-                                            {chat.image ? (
-                                                <div>
-                                                    <img
-                                                        style={{ cursor: "pointer" }}
-                                                        onClick={() =>
-                                                            window.open(chat.image, "_blank")
-                                                        }
-                                                        width={"100%"}
-                                                        src={chat.image}
-                                                        alt="image"
-                                                    ></img>
-                                                </div>
-                                            ) : (
-                                                <div>{chat.message}</div>
-                                            )}
-                                            <span style={{ color: themeColors.accentForeground }}>
-                                                {chat.timestamp
-                                                    ?.toDate()
-                                                    .toString()
-                                                    .substring(0, 21)}
-                                            </span>
-                                        </div>
-                                    </ReceiveTextWrapper>
-                                )}
-                            </React.Fragment>
-                        ))}
+                        <span>{adminOrgName}</span>
                     </div>
-                    <div ref={scrollTo}></div>
-                </ChatView2>
-                <div>
-                    {image ? (
-                        <ProgressBar
-                            className="progress__bar"
-                            value={progress}
-                            max="100"
-                        ></ProgressBar>
-                    ) : null}
-                    <SendMessageWrapper style={{ borderColor: themeColors.border }}>
-                        <Input
-                            style={{
-                                background: themeColors.accentBackground,
-                                color: themeColors.foreground,
-                            }}
-                            disabled={!!image}
-                            onKeyUp={handleKeyEnter}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                setMessage(e.target.value)
-                            }
+
+                    {/* Chat Messages */}
+                    <div className="flex-grow overflow-y-auto p-4 space-y-3 scrollbar-hide">
+                        {chats.map((chat: DocumentData, i: React.Key) => (
+                            <div
+                                key={i}
+                                className={`
+                                    flex w-full ${chat.fromClient ? "justify-end" : "justify-start"}
+                                `}
+                            >
+                                <div
+                                    className={`
+                                        max-w-[80%] p-3 rounded-2xl 
+                                        ${
+                                            chat.fromClient
+                                                ? "bg-blue-100 rounded-tr-sm"
+                                                : "bg-gray-200 rounded-tl-sm"
+                                        }
+                                    `}
+                                >
+                                    {chat.image ? (
+                                        <img
+                                            src={chat.image}
+                                            alt="Uploaded"
+                                            className="max-w-full rounded-lg cursor-pointer hover:opacity-80 transition"
+                                            onClick={() => window.open(chat.image, "_blank")}
+                                        />
+                                    ) : (
+                                        <p className="text-sm">{chat.message}</p>
+                                    )}
+                                    <p className="text-xs mt-1 opacity-50 text-right">
+                                        {chat.timestamp?.toDate().toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                        <div ref={scrollTo}></div>
+                    </div>
+
+                    {/* Message Input Area */}
+                    <div
+                        className="p-4 border-t flex items-center gap-2"
+                        style={{
+                            borderColor: themeColors.border,
+                            backgroundColor: themeColors.background,
+                        }}
+                    >
+                        <input
+                            className="flex-grow p-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            placeholder="Type your message..."
                             value={message}
-                            placeholder="Send a message"
-                        ></Input>
-                        <>
-                            <UploadLabel className="upload__label" htmlFor="upload">
-                                <UploadImage />
-                            </UploadLabel>
-                            <FileUpload
-                                id="upload"
-                                className="file__upload"
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyUp={(e) => e.key === "Enter" && sendMessage()}
+                        />
+                        <label className="cursor-pointer hover:bg-gray-100 p-2 rounded-full">
+                            <UploadImage />
+                            <input
                                 type="file"
+                                className="hidden"
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
-                        </>
-
-                        <SendBtn
+                        </label>
+                        <button
+                            className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition"
                             onClick={image ? handleUpload : sendMessage}
-                            style={{
-                                color: primaryColor,
-                                background: themeColors.background,
-                            }}
-                            className="send__btn"
                         >
                             <SendMessage />
-                        </SendBtn>
-                    </SendMessageWrapper>
+                        </button>
+                    </div>
                 </div>
-            </ChatView>
-        </ChatWrapper>
+            )}
+        </div>
     );
 }
+
+export default Chat;

@@ -1,4 +1,3 @@
-import { theme } from "../../theme";
 const SendMessage = () => {
     return (
         <svg
@@ -8,12 +7,9 @@ const SendMessage = () => {
             height="60.000000pt"
             viewBox="0 0 60.000000 60.000000"
             preserveAspectRatio="xMidYMid meet"
+            className="h-6 w-6"
         >
-            <g
-                transform="translate(0.000000,60.000000) scale(0.100000,-0.100000)"
-                fill={theme.palette.primary.main}
-                stroke="none"
-            >
+            <g transform="translate(0.000000,60.000000) scale(0.100000,-0.100000)" stroke="none">
                 <path
                     d="M292 469 c-222 -71 -232 -75 -232 -88 0 -17 140 -122 153 -115 6 4
 57 44 112 88 127 101 133 105 119 86 -6 -8 -47 -60 -90 -115 -44 -55 -84 -106

@@ -4,6 +4,22 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import PageWrapper from "../components/PageWrapper";
+import Chat from "@/components/Chat";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Configuration: React.FC = () => {
     const npmScript = "npm install @patt-rick/react-quickchat";
@@ -35,6 +51,18 @@ const Configuration: React.FC = () => {
         script,
     }) => (
         <Card className="mb-4 hover:shadow-lg transition-shadow duration-300 p-0 bg-secondary">
+            <Chat
+                primaryColor={"yellow"}
+                clientDetails={{
+                    clientName: "Emmanuel",
+                    clientId: 6,
+                    clientOrgName: "UPSA",
+                }}
+                adminDetails={{
+                    adminOrgName: "Jeskin Org",
+                    adminOrgId: "8v7EuKA4UYIyCzBwkei7",
+                }}
+            />
             <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                     <pre className="text-sm overflow-x-auto flex-grow">{children}</pre>
@@ -93,29 +121,84 @@ const Configuration: React.FC = () => {
                     <h3 className="text-lg font-semibold mb-4">Sample Implementation</h3>
                     <CodeBlock script={`import { Chat } from '@patt-rick/react-quickchat'`}>
                         <code className="block whitespace-pre-wrap">
-                            {`  import React from 'react';
-                                import { Chat } from '@patt-rick/react-quickchat'
+                            {`import React from 'react';
+import { Chat } from '@patt-rick/react-quickchat'
 
-                                function App() {
-                                return (
-                                    <Chat
-                                    primaryColor=// any hex color or rgb (optional)
-                                    clientDetails={{
-                                        clientName: // name of client,
-                                        clientId: // any id relating to client,
-                                        clientOrgName: // name of organisation of client
-                                    }}
-                                    adminDetails={{
-                                        adminOrgName: '${organisationName}',
-                                        adminOrgId: '${organisationId}'
-                                    }}
-                                    />
-                                );
-                                }`}
+function App() {
+return (
+    <Chat
+    primaryColor=// any hex color or rgb (optional)
+    clientDetails={{
+        clientName: // name of client,
+        clientId: // any id relating to client,
+        clientOrgName: // name of organisation of client
+    }}
+    adminDetails={{
+        adminOrgName: '${organisationName}',
+        adminOrgId: '${organisationId}'
+    }}
+    />
+);
+}`}
                         </code>
                     </CodeBlock>
                 </section>
             </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Open</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Billing
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Settings
+                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Keyboard shortcuts
+                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>Team</DropdownMenuItem>
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuItem>Email</DropdownMenuItem>
+                                    <DropdownMenuItem>Message</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>More...</DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                        <DropdownMenuItem>
+                            New Team
+                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>GitHub</DropdownMenuItem>
+                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuItem disabled>API</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                        Log out
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </PageWrapper>
     );
 };
