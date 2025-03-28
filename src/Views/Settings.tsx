@@ -1,83 +1,64 @@
-import styled from "styled-components";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageWrapper from "../components/PageWrapper";
-import { Button, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useContext, useState } from "react";
 import ColorSelect from "../components/ColorSelect";
-import { ThemeContext } from "../Contexts/ThemeContext";
 
-const Settings = () => {
-    const { themeColors, toggleTheme } = useContext(ThemeContext);
+const Settings: React.FC = () => {
     const [color, setColor] = useState(localStorage.getItem("APP_COLOR") || "#556cd6");
+
     const applyColorChange = () => {
         localStorage.setItem("APP_COLOR", color);
         window.location.reload();
     };
-    const handleThemeChange = (_event: SelectChangeEvent<any>) => {
-        toggleTheme();
-    };
+
+    const currentTheme = localStorage.getItem("theme") || "light";
 
     return (
-        <PageWrapper title={"Settings"} subTitle="Change the way your application feels">
-            <div style={{ padding: "2rem 0" }}>
-                <SettingsDiv>
-                    <p>Change App theme</p>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={localStorage.getItem("theme")}
-                        onChange={handleThemeChange}
-                        sx={{
-                            color: themeColors.accentForeground,
-                            borderColor: themeColors.accentForeground,
-                            margin: "2px 1rem",
-                            width: "140px",
-                        }}
-                    >
-                        <MenuItem
-                            sx={{
-                                color: themeColors.foreground,
-                                backgroundColor: themeColors.background,
-                            }}
-                            value={"light"}
-                        >
-                            Light
-                        </MenuItem>
-                        <MenuItem
-                            sx={{
-                                color: themeColors.foreground,
-                                backgroundColor: themeColors.background,
-                            }}
-                            value={"dark"}
-                        >
-                            Dark
-                        </MenuItem>
-                    </Select>
-                </SettingsDiv>
-                <SettingsDiv>
-                    <p>Choose App color</p>
-                    <ColorSelect value={color} onSelect={setColor} />
-                    <Button
-                        sx={{ color: themeColors.background, marginTop: "1rem" }}
-                        variant="contained"
-                        onClick={applyColorChange}
-                        color="primary"
-                    >
-                        Apply
-                    </Button>
-                </SettingsDiv>
+        <PageWrapper title="Settings" subTitle="Change the way your application feels">
+            <div className="space-y-6 p-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>App Theme</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex items-center space-x-4">
+                        <span className="text-sm font-medium">Change Theme</span>
+                        <Select value={currentTheme} onValueChange={() => {}}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select theme" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="light">Light</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>App Color</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                            Choose your preferred application color
+                        </p>
+                        <ColorSelect value={color} onSelect={setColor} />
+                        <Button onClick={applyColorChange} className="mt-4">
+                            Apply Color
+                        </Button>
+                    </CardContent>
+                </Card>
             </div>
         </PageWrapper>
     );
 };
 
 export default Settings;
-
-const SettingsDiv = styled.div`
-    font-size: 1.1rem;
-    font-weight: 400;
-    display: flex;
-    gap: 3rem;
-    align-items: flex-start;
-    height: fit-content;
-    margin-bottom: 2rem;
-`;

@@ -1,13 +1,11 @@
-import { useContext } from "react";
-import styled from "styled-components";
-import { ThemeContext } from "../Contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 
 interface ColorSelectProps {
     value: string;
     onSelect: (x: string) => void;
 }
-const ColorSelect = (props: ColorSelectProps) => {
-    const { themeColors } = useContext(ThemeContext);
+
+const ColorSelect: React.FC<ColorSelectProps> = ({ value, onSelect }) => {
     const colors = [
         "#556cd6",
         "#FF5733",
@@ -23,39 +21,27 @@ const ColorSelect = (props: ColorSelectProps) => {
     ];
 
     return (
-        <>
-            <Div style={{ borderColor: themeColors.border }}>
-                {colors.map((color) => (
-                    <Color
-                        onClick={() => props.onSelect(color)}
-                        style={{
-                            backgroundColor: color,
-                            borderColor: themeColors.border,
-                            boxShadow: props.value === color ? `0 0 0 4px ${color}` : "",
-                        }}
-                        key={color}
-                    />
-                ))}
-            </Div>
-        </>
+        <div
+            className={cn("grid grid-cols-5 gap-4 p-4 border-2 rounded-lg", "max-w-md ")}
+            style={{}}
+        >
+            {colors.map((color) => (
+                <button
+                    key={color}
+                    onClick={() => onSelect(color)}
+                    className={cn(
+                        "w-10 h-10 rounded-md cursor-pointer transition-all duration-200",
+                        "hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                        value === color ? "ring-4 ring-offset-2" : ""
+                    )}
+                    style={{
+                        backgroundColor: color,
+                    }}
+                    aria-label={`Select ${color} color`}
+                />
+            ))}
+        </div>
     );
 };
 
 export default ColorSelect;
-const Div = styled.div`
-    width: fit-content;
-    height: fit-content;
-    border-radius: 8px;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    gap: 1rem;
-    border: 2px solid;
-    padding: 1rem;
-`;
-const Color = styled.div`
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    border: 4px solid #ddd;
-    cursor: pointer;
-`;

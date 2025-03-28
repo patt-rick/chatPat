@@ -1,61 +1,37 @@
-import React, { useEffect, useState } from "react";
-import Slide, { SlideProps } from "@mui/material/Slide";
-import Snackbar from "@mui/material/Snackbar";
-import { Alert } from "@mui/material";
-
-type AlertType = "success" | "error" | "warning" | "info";
+import { useEffect } from "react";
+import { Toaster, toast } from "sonner";
 
 function Notification() {
-    const [alert, setAlert] = useState<AlertType>("info");
-    const [open, setOpen] = useState<boolean>(false);
-    const [alertMessage, setAlertMessage] = useState("");
-
     useEffect(() => {
-        window.addEventListener("NotificationEvent", handleAlert);
+        const handleAlert = (event: CustomEvent) => {
+            const { msg, type, duration = 3000 } = event.detail;
+
+            switch (type) {
+                case "success":
+                    toast.success(msg, { duration });
+                    break;
+                case "error":
+                    toast.error(msg, { duration: undefined });
+                    break;
+                case "warning":
+                    toast.warning(msg, { duration });
+                    break;
+                case "info":
+                    toast.info(msg, { duration });
+                    break;
+                default:
+                    toast(msg, { duration });
+            }
+        };
+
+        window.addEventListener("NotificationEvent", handleAlert as EventListener);
 
         return () => {
-            window.removeEventListener("NotificationEvent", handleAlert);
+            window.removeEventListener("NotificationEvent", handleAlert as EventListener);
         };
     }, []);
 
-    const handleAlert = (event: any) => {
-        setAlertMessage(event.detail.msg);
-        setAlert(event.detail.type);
-        setOpen(true);
-
-        // Hide the alert after 3 seconds
-        if (["success", "info"].includes(event.detail.type))
-            setTimeout(() => {
-                setOpen(false);
-            }, event.detail.duration);
-    };
-    const handleClose = (_event: React.SyntheticEvent | Event) => {
-        setOpen(false);
-    };
-
-    return (
-        <>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={open}
-                sx={{ maxWidth: "50%", display: open ? "" : "none" }}
-                TransitionComponent={TransitionLeft}
-            >
-                <Alert
-                    variant="filled"
-                    onClose={handleClose}
-                    severity={alert}
-                    sx={{ width: "100%" }}
-                >
-                    {alertMessage}
-                </Alert>
-            </Snackbar>
-        </>
-    );
-    type TransitionProps = Omit<SlideProps, "direction">;
-    function TransitionLeft(props: TransitionProps) {
-        return <Slide {...props} direction="left" />;
-    }
+    return <Toaster position="top-right" richColors closeButton />;
 }
 
 export default Notification;

@@ -1,19 +1,14 @@
 import styled from "styled-components";
 import "../assets/css/care.css";
 import ProfileImage from "./ProfileImage";
-import { useContext } from "react";
-import { ThemeContext } from "../Contexts/ThemeContext";
 interface ChatCardProps {
     data: any;
     onSelect: (x: any) => void;
     selectedChatId: number | string | null;
 }
 const ChatCard = (props: ChatCardProps) => {
-    const { themeColors } = useContext(ThemeContext);
-
     return (
         <Wrapper
-            color={themeColors.accentBackground}
             onClick={() => props.onSelect(props.data)}
             className={`chat__wrapper ${props.data.id === props.selectedChatId ? "active" : " "}`}
         >
@@ -27,15 +22,5 @@ const ChatCard = (props: ChatCardProps) => {
 };
 
 export default ChatCard;
-interface ChatProps {
-    color: string;
-}
 
-const Wrapper = styled.span<ChatProps>`
-    &:hover {
-        background-color: ${(props: ChatProps) => props.color};
-    }
-    &.active {
-        background-color: ${(props: ChatProps) => props.color};
-    }
-`;
+const Wrapper = styled.span``;

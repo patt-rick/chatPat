@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppRoutes } from "./routes";
 import Prevent from "./Prevent";
 import Authorize from "./Authorize";
-import { GlobalStylesFn } from "./GlobalStylesFn";
 import Login from "./Views/Login/Login";
 
 function App() {
     return (
         <Router>
-            <GlobalStylesFn />
             <Routes>
                 <Route element={<Prevent />}>
                     <Route path="/login" element={<Login />} />
