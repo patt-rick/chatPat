@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
@@ -10,17 +8,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageWrapper from "../components/PageWrapper";
 import ColorSelect from "../components/ColorSelect";
+import { useTheme } from "@/Contexts/theme-provider";
 
 const Settings: React.FC = () => {
-    const [color, setColor] = useState(localStorage.getItem("APP_COLOR") || "#556cd6");
-
-    const applyColorChange = () => {
-        localStorage.setItem("APP_COLOR", color);
-        window.location.reload();
+    const { theme, setTheme } = useTheme();
+    const handleToggle = (checked: "light" | "dark") => {
+        setTheme(checked);
     };
-
-    const currentTheme = localStorage.getItem("theme") || "light";
-
     return (
         <PageWrapper title="Settings" subTitle="Change the way your application feels">
             <div className="space-y-6 p-4">
@@ -30,7 +24,7 @@ const Settings: React.FC = () => {
                     </CardHeader>
                     <CardContent className="flex items-center space-x-4">
                         <span className="text-sm font-medium">Change Theme</span>
-                        <Select value={currentTheme} onValueChange={() => {}}>
+                        <Select value={theme} onValueChange={handleToggle}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Select theme" />
                             </SelectTrigger>
@@ -50,10 +44,7 @@ const Settings: React.FC = () => {
                         <p className="text-sm text-muted-foreground">
                             Choose your preferred application color
                         </p>
-                        <ColorSelect value={color} onSelect={setColor} />
-                        <Button onClick={applyColorChange} className="mt-4">
-                            Apply Color
-                        </Button>
+                        <ColorSelect />
                     </CardContent>
                 </Card>
             </div>

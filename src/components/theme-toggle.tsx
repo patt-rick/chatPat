@@ -23,7 +23,7 @@ export function ThemeToggle() {
     return (
         <div className="flex items-center justify-between space-x-2 p-2">
             <Label className="font-medium" htmlFor="theme-mode">
-                Toggle dark mode
+                Dark mode
             </Label>
             <Switch id="theme-mode" checked={theme === "dark"} onCheckedChange={handleToggle} />
         </div>
