@@ -13,6 +13,7 @@ import {
 import { SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useContext } from "react";
 import { UserContext } from "@/Contexts/Usercontext";
+import { ThemeToggle } from "./theme-toggle";
 
 export function NavUser() {
     const { isMobile } = useSidebar();
@@ -63,6 +64,9 @@ export function NavUser() {
                                 </div>
                             </div>
                         </DropdownMenuLabel>
+
+                        <DropdownMenuSeparator />
+                        <ThemeToggle />
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                             <LogOutIcon />
