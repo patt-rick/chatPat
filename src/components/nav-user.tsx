@@ -10,12 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useContext } from "react";
 import { UserContext } from "@/Contexts/Usercontext";
 
@@ -31,10 +26,7 @@ export function NavUser() {
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton
-                            size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                        >
+                        <div className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex gap-2 items-center p-2 rounded-md">
                             <Avatar className="h-8 w-8 rounded-lg grayscale">
                                 <AvatarImage src={undefined} alt={profile.displayName} />
                                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
@@ -46,7 +38,7 @@ export function NavUser() {
                                 </span>
                             </div>
                             <MoreVerticalIcon className="ml-auto size-4" />
-                        </SidebarMenuButton>
+                        </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
