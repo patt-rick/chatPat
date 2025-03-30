@@ -49,7 +49,7 @@ export function Chat(props: ChatProps) {
     const [message, setMessage] = useState("");
     const [chats, setChats] = useState<DocumentData[]>([]);
     const [image, setImage] = useState<File | null>(null);
-    const [progress, setProgress] = useState(0);
+    const [_progress, setProgress] = useState(0);
 
     const scrollTo = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -156,12 +156,6 @@ export function Chat(props: ChatProps) {
         if (e.target.files && e.target.files[0]) {
             setImage(e.target.files[0]);
             setMessage(`UPLOAD ${e.target.files[0].name}`);
-        }
-    };
-
-    const handleKeyEnter = (event: { key: string }) => {
-        if (event.key === "Enter") {
-            sendMessage();
         }
     };
 
