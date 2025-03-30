@@ -492,7 +492,6 @@ function SidebarMenuButton({
     const { isMobile, state } = useSidebar();
 
     const button = (
-        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-button"
             data-sidebar="menu-button"
@@ -542,7 +541,6 @@ function SidebarMenuAction({
     const Comp = asChild ? Slot : "button";
 
     return (
-        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-action"
             data-sidebar="menu-action"
@@ -657,7 +655,6 @@ function SidebarMenuSubButton({
     const Comp = asChild ? Slot : "a";
 
     return (
-        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-sub-button"
             data-sidebar="menu-sub-button"
