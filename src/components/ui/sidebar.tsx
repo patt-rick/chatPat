@@ -295,7 +295,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
         <main
             data-slot="sidebar-inset"
             className={cn(
-                "bg-background relative flex w-full flex-1 flex-col h-[98.4vh]",
+                "bg-background relative flex w-full flex-1 flex-col h-[97.4vh]",
                 "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
                 className
             )}
@@ -382,6 +382,8 @@ function SidebarGroupLabel({
 
     return (
         <Comp
+            // @ts-ignore
+            ref={props.ref as React.Ref<HTMLDivElement>}
             data-slot="sidebar-group-label"
             data-sidebar="group-label"
             className={cn(
@@ -402,6 +404,7 @@ function SidebarGroupAction({
     const Comp = asChild ? Slot : "button";
 
     return (
+        // @ts-ignore
         <Comp
             data-slot="sidebar-group-action"
             data-sidebar="group-action"
@@ -489,6 +492,7 @@ function SidebarMenuButton({
     const { isMobile, state } = useSidebar();
 
     const button = (
+        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-button"
             data-sidebar="menu-button"
@@ -538,6 +542,7 @@ function SidebarMenuAction({
     const Comp = asChild ? Slot : "button";
 
     return (
+        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-action"
             data-sidebar="menu-action"
@@ -652,6 +657,7 @@ function SidebarMenuSubButton({
     const Comp = asChild ? Slot : "a";
 
     return (
+        // @ts-expect-error
         <Comp
             data-slot="sidebar-menu-sub-button"
             data-sidebar="menu-sub-button"

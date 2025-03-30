@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import ProfileImage from "./ProfileImage";
 interface ChatCardProps {
     data: any;
@@ -7,7 +6,7 @@ interface ChatCardProps {
 }
 const ChatCard = (props: ChatCardProps) => {
     return (
-        <Wrapper
+        <div
             onClick={() => props.onSelect(props.data)}
             className={`flex gap-2 m-2 cursor-pointer rounded-xl p-2 hover:bg-accent ${
                 props.data.id === props.selectedChatId ? "bg-secondary" : " "
@@ -18,10 +17,8 @@ const ChatCard = (props: ChatCardProps) => {
                 <div className="tex-lg">{props.data.clientName}</div>
                 <span className="text-sm">{props.data.organisationName}</span>
             </div>
-        </Wrapper>
+        </div>
     );
 };
 
 export default ChatCard;
-
-const Wrapper = styled.span``;

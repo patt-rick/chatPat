@@ -9,7 +9,7 @@ const Dashboard = () => {
                 <EmptyStates msg="Feature will be delivered soon" imgToUse="notReady" />
             </div>
             <Chat
-                primaryColor={"yellow"}
+                primaryColor={"teal"}
                 clientDetails={{
                     clientName: "Emmanuel",
                     clientId: 6,

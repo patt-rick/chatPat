@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, ChangeEvent } from "react";
+import { useState, useRef, useContext, useEffect, ChangeEvent } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ interface Message {
     timestamp: any;
 }
 
-const Care: React.FC = () => {
+const Care = () => {
     const { orgInfo } = useContext(UserContext);
     const { clientsList, clientsLoading } = useContext(ClientsContext);
 
