@@ -45,7 +45,7 @@ const SignIn = () => {
             });
 
             if (resp.success) {
-                navigate("/");
+                navigate("/dashboard");
                 showInfo(`Welcome ${resp.name}`, 3000);
             } else {
                 setErrors({ root: resp.message || "Login failed" });

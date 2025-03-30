@@ -8,7 +8,7 @@ export const MainRoutes = [
     {
         title: "Dashboard",
         id: "dashboard-001",
-        url: "/",
+        url: "/dashboard",
         icon: Table2,
         component: Dashboard,
     },

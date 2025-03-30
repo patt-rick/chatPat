@@ -3,12 +3,14 @@ import { AppRoutes } from "./routes";
 import Prevent from "./Prevent";
 import Authorize from "./Authorize";
 import Login from "./Views/Login/Login";
+import Landing from "./Views/Landing/Landing";
 
 function App() {
     return (
         <Router>
             <Routes>
                 <Route element={<Prevent />}>
+                    <Route path="/" element={<Landing />} />
                     <Route path="/login" element={<Login />} />
                 </Route>
                 <Route element={<Authorize />}>
