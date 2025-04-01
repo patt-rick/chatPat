@@ -1,25 +1,20 @@
-import ChatCard from "./ChatCard";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import CloseIcon from "@mui/icons-material/Close";
-import SendIcon from "@mui/icons-material/Send";
-import { useEffect, useState, useRef, useContext } from "react";
-import "../assets/css/care.css";
+import { useState, useRef, useContext, useEffect, ChangeEvent } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FileImage, Send, X } from "lucide-react";
 import { onSnapshot, orderBy, query, serverTimestamp, where } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
-import React, { ChangeEvent, KeyboardEvent } from "react"; // Imported ChangeEvent and KeyboardEvent from 'react'
-import { ThemeContext } from "../Contexts/ThemeContext";
-import { theme } from "../theme";
-import EmptyStates from "./EmptyStates";
-import darkBg from "../assets/img/darkBg.png";
-import lightBg from "../assets/img/lightBg.png";
-import { db, storage } from "../firebase-config";
-import Loader from "./Loader";
-import { size } from "lodash";
+import { openDB } from "idb";
 import { UserContext } from "../Contexts/Usercontext";
 import { ClientsContext } from "../Contexts/ClientsContext";
-import { openDB } from "idb";
 import { convertTimestampToDate } from "../_helpers/utilites";
+import { db, storage } from "../firebase-config";
+import ChatCard from "./ChatCard";
+import EmptyStates from "./EmptyStates";
+import Loader from "./Loader";
 
 interface Message {
     clientId: string;
@@ -28,13 +23,13 @@ interface Message {
     message: string | null;
     image: string | URL | undefined;
     fromClient: boolean;
-    timestamp: any; // Change 'any' to appropriate type for timestamp
+    timestamp: any;
 }
 
-const Care: React.FC = () => {
+const Care = () => {
     const { orgInfo } = useContext(UserContext);
     const { clientsList, clientsLoading } = useContext(ClientsContext);
-    const { themeColors, isLightTheme } = useContext(ThemeContext);
+
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
     const [selectedChatName, setSelectedChatName] = useState<string>("");
     const [selectedClientName, setSelectedClientName] = useState<string>("");
@@ -202,158 +197,138 @@ const Care: React.FC = () => {
         }
     };
 
-    const handleKeyEnter = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            if (!image) sendMessage();
-            else handleUpload();
-        }
-    };
-
     return (
-        <div className="care-wrapper">
-            <div className="chat-list">
+        <div className="flex h-full">
+            <div className="w-1/3 border-r p-2 overflow-y-auto">
                 {clientsLoading ? (
-                    <Loader />
-                ) : !size(clientsList) ? (
-                    <div style={{ height: "100%", display: "grid" }}>
-                        <EmptyStates msg="No messages yet" imgToUse="empty" />
+                    <div className="flex justify-center items-center h-full">
+                        <Loader />
                     </div>
+                ) : clientsList.length === 0 ? (
+                    <EmptyStates msg="No messages yet" imgToUse="empty" />
                 ) : (
-                    <>
+                    <div className="space-y-2">
                         {clientsList.map((chat, i) => (
                             <ChatCard
+                                key={i}
                                 selectedChatId={selectedChatId}
                                 onSelect={onSelectChat}
-                                key={i}
                                 data={chat}
                             />
                         ))}
-                    </>
+                    </div>
                 )}
             </div>
-            {selectedChatId ? (
-                <div style={{ borderColor: themeColors.border }} className="chat__view">
-                    <div
-                        style={{
-                            background: theme.palette.primary.main,
-                            zIndex: 3,
-                            borderBottom: `1px solid ${themeColors.border}`,
-                        }}
-                        className="chat__header"
-                    >
-                        {selectedChatName || "Please Select a Chat"}
-                        <CloseIcon
-                            style={{ cursor: "pointer" }}
-                            onClick={() => setSelectedChatId(null)}
-                        />
-                    </div>
-                    <div
-                        style={{
-                            zIndex: 2,
-                            backgroundImage: `${themeColors.chatBackgroundGradient},url(${
-                                isLightTheme ? lightBg : darkBg
-                            })`,
-                        }}
-                        className="chat__main"
-                    >
-                        {messages.map((message, i) => (
-                            <div
-                                key={i}
-                                className={`message__contain ${
-                                    message.fromClient ? "receive" : "send"
-                                }`}
-                            >
-                                <div
-                                    style={{
-                                        color: themeColors.foreground,
-                                        background: message.fromClient
-                                            ? themeColors.background
-                                            : theme.palette.primary.main,
-                                        borderRadius: message.fromClient
-                                            ? " 8px 8px 8px 0px"
-                                            : "8px 8px 0px",
-                                    }}
-                                    className="message"
-                                >
-                                    {message.image ? (
-                                        <div>
-                                            <img
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => window.open(message.image, "_blank")}
-                                                width={"100%"}
-                                                src={message.image as string}
-                                                alt="image"
-                                            ></img>
-                                        </div>
-                                    ) : (
-                                        <div>{message.message}</div>
-                                    )}
-                                    <span style={{ color: themeColors.accentForeground }}>
-                                        {convertTimestampToDate(message.timestamp)}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
 
-                        <div ref={scrollTo}></div>
-                    </div>
-                    <div>
-                        {image ? (
-                            <progress
-                                className="progress__bar"
-                                value={progress}
-                                max="100"
-                            ></progress>
-                        ) : null}
-                        <div style={{ borderColor: themeColors.border }} className="message__send">
-                            <input
-                                style={{
-                                    background: themeColors.accentBackground,
-                                    color: themeColors.foreground,
-                                }}
-                                disabled={!!image}
-                                onKeyUp={handleKeyEnter}
-                                onChange={(e) => setMessage(e.target.value)}
-                                type="text"
-                                value={message}
-                                placeholder="Send a message"
-                            />
-                            <>
-                                <label className="upload__label" htmlFor="upload">
-                                    <AddPhotoAlternateIcon />
-                                </label>
-                                <input
-                                    id="upload"
-                                    className="file__upload"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                />
-                            </>
-                            <button
-                                onClick={image ? handleUpload : sendMessage}
-                                style={{
-                                    color: theme.palette.primary.main,
-                                    backgroundColor: themeColors.background,
-                                }}
-                                className="send__btn"
+            {/* Chat View */}
+            <div className="flex-1 flex flex-col">
+                {selectedChatId ? (
+                    <Card className="flex flex-col h-full w-full">
+                        {/* Chat Header */}
+                        <CardHeader className="flex flex-row justify-between items-center border-b">
+                            <CardTitle>{selectedChatName || "Please Select a Chat"}</CardTitle>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setSelectedChatId(null)}
                             >
-                                <SendIcon />
-                            </button>
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </CardHeader>
+
+                        {/* Chat Messages */}
+                        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+                            {messages.map((msg, i) => (
+                                <div
+                                    key={i}
+                                    className={`flex ${
+                                        msg.fromClient ? "justify-start" : "justify-end"
+                                    }`}
+                                >
+                                    <div
+                                        className={`max-w-[70%] p-3 rounded-lg ${
+                                            msg.fromClient
+                                                ? "bg-gray-100 text-black"
+                                                : "bg-primary text-white"
+                                        }`}
+                                    >
+                                        {msg.image ? (
+                                            <img
+                                                src={msg.image as string}
+                                                alt="Uploaded"
+                                                className="max-w-full rounded-md cursor-pointer"
+                                                onClick={() => window.open(msg.image, "_blank")}
+                                            />
+                                        ) : (
+                                            <p>{msg.message}</p>
+                                        )}
+                                        <small className="block text-xs mt-1 opacity-70">
+                                            {convertTimestampToDate(msg.timestamp)}
+                                        </small>
+                                    </div>
+                                </div>
+                            ))}
+                            <div ref={scrollTo} />
+                        </CardContent>
+
+                        {/* Message Input */}
+                        <div className="p-4 border-t flex items-center space-x-2">
+                            {image && (
+                                <div className="w-full">
+                                    <progress value={progress} max="100" className="w-full h-1" />
+                                </div>
+                            )}
+                            <Input
+                                placeholder="Send a message"
+                                value={message}
+                                disabled={!!image}
+                                onChange={(e) => setMessage(e.target.value)}
+                                onKeyUp={(e) =>
+                                    e.key === "Enter" && (image ? handleUpload() : sendMessage())
+                                }
+                                className="flex-1"
+                            />
+
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button variant="ghost" size="icon" asChild>
+                                            <label
+                                                htmlFor="image-upload"
+                                                className="cursor-pointer"
+                                            >
+                                                <FileImage className="h-5 w-5" />
+                                            </label>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Upload Image</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
+                            <input
+                                id="image-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageChange}
+                            />
+
+                            <Button
+                                onClick={image ? handleUpload : sendMessage}
+                                disabled={!message && !image}
+                            >
+                                <Send className="h-4 w-4 mr-2" /> Send
+                            </Button>
                         </div>
+                    </Card>
+                ) : (
+                    <div className="flex-1 flex items-center justify-center border-l">
+                        <EmptyStates msg="Please select a chat" imgToUse="noMessage" />
                     </div>
-                </div>
-            ) : (
-                <div
-                    style={{
-                        borderLeft: `1px solid ${themeColors.border}`,
-                        display: "grid",
-                        placeItems: "center",
-                    }}
-                >
-                    <EmptyStates msg="Please select a chat" imgToUse="noMessage" />
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

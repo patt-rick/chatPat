@@ -1,6 +1,5 @@
-// import { Chat } from "@patt-rick/react-quickchat";
+import { Chat } from "@patt-rick/react-quickchat";
 import PageWrapper from "../components/PageWrapper";
-// import { theme } from "../theme";
 import EmptyStates from "../components/EmptyStates";
 
 const Dashboard = () => {
@@ -9,8 +8,8 @@ const Dashboard = () => {
             <div style={{ display: "grid", placeItems: "center" }}>
                 <EmptyStates msg="Feature will be delivered soon" imgToUse="notReady" />
             </div>
-            {/* <Chat
-                primaryColor={theme.palette.primary.main}
+            <Chat
+                primaryColor={"teal"}
                 clientDetails={{
                     clientName: "Emmanuel",
                     clientId: 6,
@@ -20,7 +19,7 @@ const Dashboard = () => {
                     adminOrgName: "Jeskin Org",
                     adminOrgId: "8v7EuKA4UYIyCzBwkei7",
                 }}
-            /> */}
+            />
         </PageWrapper>
     );
 };

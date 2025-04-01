@@ -1,27 +1,25 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import React, { useContext, useState } from "react";
-import { styled as Styled } from "@mui/material/styles";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
-import { StepIconProps } from "@mui/material/StepIcon";
-import { Typography } from "@mui/material";
-
-import DoneIcon from "@mui/icons-material/Done";
-import BusinessIcon from "@mui/icons-material/Business";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import { z } from "zod";
 import { UserContext } from "../../Contexts/Usercontext";
-import { ThemeContext } from "../../Contexts/ThemeContext";
-import Loader from "../../components/Loader";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, ArrowRight, Building2, Send, User2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-const steps = ["Organization", "Admin"];
+const organizationSchema = z.object({
+    organizationName: z.string().trim().min(1, "Organization name is required"),
+    organizationEmail: z.string().trim().min(1, "Email is required").email("Invalid email address"),
+});
+
+const adminSchema = z.object({
+    adminName: z.string().trim().min(1, "Admin name is required"),
+    adminEmail: z.string().trim().min(1, "Email is required").email("Invalid email address"),
+    adminPassword: z.string().trim().min(6, "Password must be at least 6 characters"),
+});
+
 const SignUp = () => {
-    const { themeColors } = useContext(ThemeContext);
     const { createOrganization, loading } = useContext(UserContext);
-    const [activeStep, setActiveStep] = React.useState(0);
-    const maxPages = steps.length;
 
     const [organizationName, setOrganizationName] = useState("");
     const [organizationEmail, setOrganizationEmail] = useState("");
@@ -29,225 +27,227 @@ const SignUp = () => {
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
 
-    const handleSignUp = async () => {
-        if (
-            !organizationEmail.trim() ||
-            !organizationName.trim() ||
-            !adminEmail.trim() ||
-            !adminName.trim() ||
-            !adminPassword.trim()
-        )
-            return;
-        await createOrganization({
-            organizationName,
-            organizationEmail,
-            adminEmail,
-            adminName,
-            adminPassword,
-        });
-    };
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => {
-            if (prevActiveStep < maxPages) return prevActiveStep + 1;
-            return maxPages;
-        });
+    const [signupStep, setSignupStep] = useState<"organization" | "admin">("organization");
+
+    const [errors, setErrors] = useState<{
+        organizationName?: string;
+        organizationEmail?: string;
+        adminName?: string;
+        adminEmail?: string;
+        adminPassword?: string;
+        root?: string;
+    }>({});
+
+    const handleNextStep = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setErrors({});
+
+        try {
+            organizationSchema.parse({
+                organizationName,
+                organizationEmail,
+            });
+
+            setSignupStep("admin");
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                const formErrors = err.flatten().fieldErrors;
+                setErrors({
+                    organizationName: formErrors.organizationName?.[0],
+                    organizationEmail: formErrors.organizationEmail?.[0],
+                });
+            }
+        }
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => {
-            if (prevActiveStep > 0) return prevActiveStep - 1;
-            return 0;
-        });
-    };
-    const handleStepChange = (index: number) => {
-        // if (index < activeStep)
-        setActiveStep(index);
+    const handleSignUp = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setErrors({});
+
+        try {
+            const validatedOrgData = organizationSchema.parse({
+                organizationName,
+                organizationEmail,
+            });
+
+            const validatedAdminData = adminSchema.parse({
+                adminName,
+                adminEmail,
+                adminPassword,
+            });
+
+            await createOrganization({
+                organizationName: validatedOrgData.organizationName,
+                organizationEmail: validatedOrgData.organizationEmail,
+                adminName: validatedAdminData.adminName,
+                adminEmail: validatedAdminData.adminEmail,
+                adminPassword: validatedAdminData.adminPassword,
+            });
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                const formErrors = err.flatten().fieldErrors;
+                setErrors({
+                    organizationName: formErrors.organizationName?.[0],
+                    organizationEmail: formErrors.organizationEmail?.[0],
+                    adminName: formErrors.adminName?.[0],
+                    adminEmail: formErrors.adminEmail?.[0],
+                    adminPassword: formErrors.adminPassword?.[0],
+                });
+            } else {
+                setErrors({ root: "An unexpected error occurred" });
+            }
+        }
     };
 
-    const ColorlibConnector = Styled(StepConnector)(({ theme }) => ({
-        [`&.${stepConnectorClasses.alternativeLabel}`]: {
-            top: 17,
-        },
-        [`&.${stepConnectorClasses.active}`]: {
-            [`& .${stepConnectorClasses.line}`]: {
-                backgroundColor: theme.palette.primary.main,
-            },
-        },
-        [`&.${stepConnectorClasses.completed}`]: {
-            [`& .${stepConnectorClasses.line}`]: {
-                backgroundColor: theme.palette.primary.main,
-            },
-        },
-        [`& .${stepConnectorClasses.line}`]: {
-            height: 3,
-            border: 0,
-            backgroundColor: themeColors.border,
-            borderRadius: 1,
-        },
-    }));
-
-    const ColorlibStepIconRoot = Styled("div")<{
-        ownerState: { completed?: boolean; active?: boolean };
-    }>(({ theme, ownerState }) => ({
-        backgroundColor: themeColors.border,
-        zIndex: 1,
-        color: themeColors.background,
-        width: 35,
-        height: 35,
-        display: "flex",
-        borderRadius: "50%",
-        justifyContent: "center",
-        alignItems: "center",
-        ...(ownerState.active && {
-            backgroundColor: theme.palette.primary.main,
-            boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
-        }),
-        ...(ownerState.completed && {
-            backgroundColor: theme.palette.primary.main,
-        }),
-    }));
     return (
-        <div>
-            <div style={{ margin: "auto" }}>
-                <div style={{ borderColor: themeColors.border }} className="form__wrapper">
-                    {loading ? (
-                        <div
-                            style={{
-                                display: "grid",
-                                placeItems: "center",
-                                height: "334px",
-                                width: "307px",
-                            }}
-                        >
-                            <Loader />
-                        </div>
-                    ) : (
-                        <>
-                            <Stepper
-                                alternativeLabel
-                                activeStep={activeStep}
-                                connector={<ColorlibConnector />}
+        <Card>
+            <CardContent className="pt-6">
+                <div className="mb-8">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                            <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    signupStep === "organization"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted"
+                                }`}
                             >
-                                {steps.map((label, index) => (
-                                    <Step
-                                        sx={{ cursor: "pointer" }}
-                                        onClick={() => handleStepChange(index)}
-                                        key={label}
-                                    >
-                                        <StepLabel
-                                            sx={{ fontSize: "1rem" }}
-                                            StepIconComponent={ColorlibStepIcon}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    fontSize: "1rem",
-                                                    textAlign: "center",
-                                                    color: themeColors.accentForeground,
-                                                }}
-                                            >
-                                                {label}
-                                            </Typography>
-                                        </StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
-
-                            {activeStep === 0 ? (
-                                <>
-                                    <TextField
-                                        className="input-text"
-                                        required
-                                        id="standard-org-name"
-                                        label="Organization Name"
-                                        variant="standard"
-                                        value={organizationName}
-                                        onChange={(e) => setOrganizationName(e.target.value)}
-                                    />
-                                    <TextField
-                                        className="input-text"
-                                        required
-                                        id="standard-org-email"
-                                        label="Organization Email"
-                                        variant="standard"
-                                        value={organizationEmail}
-                                        onChange={(e) => setOrganizationEmail(e.target.value)}
-                                    />
-                                    <Button
-                                        onClick={handleNext}
-                                        sx={{ borderRadius: "8px", padding: "0.7rem" }}
-                                        variant="contained"
-                                    >
-                                        Add an admin
-                                    </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <TextField
-                                        className="input-text"
-                                        required
-                                        id="standard-ad-name"
-                                        label="Admin Name"
-                                        variant="standard"
-                                        value={adminName}
-                                        onChange={(e) => setAdminName(e.target.value)}
-                                    />
-                                    <TextField
-                                        className="input-text"
-                                        required
-                                        id="standard-ad-email"
-                                        label="Admin Email"
-                                        variant="standard"
-                                        value={adminEmail}
-                                        onChange={(e) => setAdminEmail(e.target.value)}
-                                    />
-                                    <TextField
-                                        className="input-text"
-                                        required
-                                        id="standard-ad-password"
-                                        label="Password"
-                                        variant="standard"
-                                        type="password"
-                                        value={adminPassword}
-                                        onChange={(e) => setAdminPassword(e.target.value)}
-                                    />
-                                    <div style={{ display: "flex", gap: "1rem" }}>
-                                        <Button
-                                            onClick={handleBack}
-                                            sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
-                                            variant="outlined"
-                                        >
-                                            back
-                                        </Button>
-                                        <Button
-                                            onClick={handleSignUp}
-                                            sx={{ borderRadius: "8px", padding: "0.7rem", flex: 1 }}
-                                            variant="contained"
-                                        >
-                                            Sign up
-                                        </Button>
-                                    </div>
-                                </>
-                            )}
-                        </>
-                    )}
+                                1
+                            </div>
+                            <div className="h-1 w-12 bg-muted mx-2" />
+                            <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    signupStep === "admin"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted"
+                                }`}
+                            >
+                                2
+                            </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                            Step {signupStep === "organization" ? "1/2" : "2/2"}
+                        </p>
+                    </div>
+                    <h2 className="text-lg font-semibold">
+                        {signupStep === "organization" ? "Organization Details" : "Admin Account"}
+                    </h2>
                 </div>
-            </div>
-        </div>
+
+                {signupStep === "organization" ? (
+                    <form className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="orgName">Organization Name</Label>
+                            <div className="relative">
+                                <Input
+                                    id="orgName"
+                                    name="orgName"
+                                    value={organizationName}
+                                    onChange={(e) => setOrganizationName(e.target.value)}
+                                    placeholder="Acme Inc."
+                                    className="pl-10"
+                                />
+                                <Building2 className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                            </div>
+                            {errors.organizationName && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.organizationName}
+                                </p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="orgEmail">Email</Label>
+                            <Input
+                                id="orgEmail"
+                                name="orgEmail"
+                                value={organizationEmail}
+                                onChange={(e) => setOrganizationEmail(e.target.value)}
+                                placeholder="e.g., TechnologyLtd@example.com"
+                            />
+                            {errors.organizationEmail && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.organizationEmail}
+                                </p>
+                            )}
+                        </div>
+                        <Button className="w-full" onClick={handleNextStep}>
+                            Next Step
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    </form>
+                ) : (
+                    <form className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="adminName">Admin Name</Label>
+                            <div className="relative">
+                                <Input
+                                    id="adminName"
+                                    name="adminName"
+                                    value={adminName}
+                                    onChange={(e) => setAdminName(e.target.value)}
+                                    placeholder="John Doe"
+                                    className="pl-10"
+                                />
+                                <User2 className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                            </div>
+                            {errors.adminName && (
+                                <p className="text-red-500 text-sm mt-1">{errors.adminName}</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="adminEmail">Email</Label>
+                            <div className="relative">
+                                <Input
+                                    id="adminEmail"
+                                    name="adminEmail"
+                                    type="email"
+                                    value={adminEmail}
+                                    onChange={(e) => setAdminEmail(e.target.value)}
+                                    placeholder="name@example.com"
+                                    className="pl-10"
+                                />
+                                <User2 className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                            </div>
+                            {errors.adminEmail && (
+                                <p className="text-red-500 text-sm mt-1">{errors.adminEmail}</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="adminPassword">Password</Label>
+                            <Input
+                                id="adminPassword"
+                                name="adminPassword"
+                                type="password"
+                                value={adminPassword}
+                                onChange={(e) => setAdminPassword(e.target.value)}
+                            />
+                            {errors.adminPassword && (
+                                <p className="text-red-500 text-sm mt-1">{errors.adminPassword}</p>
+                            )}
+                        </div>
+                        {errors.root && <p className="text-red-500 text-sm">{errors.root}</p>}
+                        <div className="flex gap-3">
+                            <Button
+                                variant="outline"
+                                className="flex-1"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setSignupStep("organization");
+                                }}
+                            >
+                                <ArrowLeft className="w-4 h-4 mr-2" />
+                                Back
+                            </Button>
+                            <Button onClick={handleSignUp} className="flex-1" disabled={loading}>
+                                {loading ? "Creating..." : "Create Account"}
+                                <Send className="w-4 h-4 ml-2" />
+                            </Button>
+                        </div>
+                    </form>
+                )}
+            </CardContent>
+        </Card>
     );
-    function ColorlibStepIcon(props: StepIconProps) {
-        const { active, completed, className } = props;
-
-        const icons: { [index: string]: React.ReactElement } = {
-            1: completed ? <DoneIcon /> : <BusinessIcon />,
-            2: completed ? <DoneIcon /> : <SupervisorAccountIcon />,
-        };
-
-        return (
-            <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-                {icons[String(props.icon)]}
-            </ColorlibStepIconRoot>
-        );
-    }
 };
 
 export default SignUp;

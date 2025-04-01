@@ -1,41 +1,24 @@
-import styled from "styled-components";
-import "../assets/css/care.css";
 import ProfileImage from "./ProfileImage";
-import { useContext } from "react";
-import { ThemeContext } from "../Contexts/ThemeContext";
 interface ChatCardProps {
     data: any;
     onSelect: (x: any) => void;
     selectedChatId: number | string | null;
 }
 const ChatCard = (props: ChatCardProps) => {
-    const { themeColors } = useContext(ThemeContext);
-
     return (
-        <Wrapper
-            color={themeColors.accentBackground}
+        <div
             onClick={() => props.onSelect(props.data)}
-            className={`chat__wrapper ${props.data.id === props.selectedChatId ? "active" : " "}`}
+            className={`flex gap-2 m-2 cursor-pointer rounded-xl p-2 hover:bg-accent ${
+                props.data.id === props.selectedChatId ? "bg-secondary" : " "
+            }`}
         >
             <ProfileImage initial={props.data.clientName[0]} id={props.data.id} />
             <div>
-                <div className="client">{props.data.clientName}</div>
-                <span className="school">{props.data.organisationName}</span>
+                <div className="tex-lg">{props.data.clientName}</div>
+                <span className="text-sm">{props.data.organisationName}</span>
             </div>
-        </Wrapper>
+        </div>
     );
 };
 
 export default ChatCard;
-interface ChatProps {
-    color: string;
-}
-
-const Wrapper = styled.span<ChatProps>`
-    &:hover {
-        background-color: ${(props: ChatProps) => props.color};
-    }
-    &.active {
-        background-color: ${(props: ChatProps) => props.color};
-    }
-`;

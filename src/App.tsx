@@ -1,17 +1,16 @@
-import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppRoutes } from "./routes";
 import Prevent from "./Prevent";
 import Authorize from "./Authorize";
-import { GlobalStylesFn } from "./GlobalStylesFn";
 import Login from "./Views/Login/Login";
+import Landing from "./Views/Landing/Landing";
 
 function App() {
     return (
         <Router>
-            <GlobalStylesFn />
             <Routes>
                 <Route element={<Prevent />}>
+                    <Route path="/" element={<Landing />} />
                     <Route path="/login" element={<Login />} />
                 </Route>
                 <Route element={<Authorize />}>

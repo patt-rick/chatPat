@@ -1,32 +1,31 @@
-import SettingsIcon from "@mui/icons-material/Settings";
-import GridViewIcon from "@mui/icons-material/GridView";
-import MarkAsUnreadIcon from "@mui/icons-material/MarkAsUnread";
-import BuildIcon from "@mui/icons-material/Build";
 import Dashboard from "./Views/Dashboard";
 import Settings from "./Views/Settings";
 import ClientMessages from "./Views/ClientMessages";
 import Configuration from "./Views/Configuration";
+import { MessageSquare, Settings2, SettingsIcon, Table2 } from "lucide-react";
 
-export const AppRoutes = [
+export const MainRoutes = [
     {
         title: "Dashboard",
         id: "dashboard-001",
-        url: "/",
-        icon: GridViewIcon,
+        url: "/dashboard",
+        icon: Table2,
         component: Dashboard,
     },
     {
         title: "Messages",
         id: "clients-001",
         url: "/client-messages",
-        icon: MarkAsUnreadIcon,
+        icon: MessageSquare,
         component: ClientMessages,
     },
+];
+export const SecondaryRoutes = [
     {
         title: "Configuration",
         id: "configure-001",
         url: "/configuration",
-        icon: BuildIcon,
+        icon: Settings2,
         component: Configuration,
     },
     {
@@ -37,3 +36,4 @@ export const AppRoutes = [
         component: Settings,
     },
 ];
+export const AppRoutes = [...MainRoutes, ...SecondaryRoutes];
